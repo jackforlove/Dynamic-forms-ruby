@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  form_id: 1
+  must_in: false
+  name: MyString
+  default: false
+  repeat: false
+  is_case: false
+  extra: MyText
+
+two:
+  form_id: 1
+  must_in: false
+  name: MyString
+  default: false
+  repeat: false
+  is_case: false
+  extra: MyText

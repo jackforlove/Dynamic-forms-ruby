@@ -1,0 +1,10 @@
+<%=form_tag controller:"test",action:"first",method: "post" do%>
+<label for="first_tag">用户名</label>
+<%= text_field_tag :first_tag,params[:first_tag]%>
+<br>
+<label for="second_tag">密码</label>
+<%= password_field_tag :second_tag,params[:second_tag]%>
+<label for="num_tag">输入数字</label>
+<%= text_field_tag :num_tag,params[:num_tag]%>
+<%= submit_tag "走起"%>
+<%end%>

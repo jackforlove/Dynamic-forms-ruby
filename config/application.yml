@@ -1,0 +1,22 @@
+defaults: &defaults
+  sso_host: 'http://sso-test.wfl-ischool.cn'
+  sso_login_url: "http://sso-test.wfl-ischool.cn/api/users/auth"
+  app_id: 'NAxmU6TalokXoA6n'
+  app_secret: '6pHEs28nXVtTPASBf5TpgA'
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  s3_upload_url: "http://tools.wfl-ischool.cn/s3-upload-url-generator/uploadUrl"
+  s3_upload_key: 'wfl-ischool-math-sense'
+  redis:
+    host: localhost
+    port: 6379
+    namespace: math-sense
+    data_db: 0
+    job_db: 1
+    cache_db: 2
