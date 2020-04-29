@@ -10,27 +10,30 @@ class FormController < ApplicationController
     end
     
     def create
-        filed_date=params[:properties]
-        filed_name=JSON.parse(filed_date)[0]["name"]
-        filed_label=JSON.parse(filed_date)[0]["label"]
-        filed_type=JSON.parse(filed_date)[0]["type"]
-        value_content=JSON.parse(filed_date)[0]["value"]
-        form_name="TEST"
-
+        form_name=Time.now
         user_obj=User.find(current_user.id)
         form_obj=user_obj.forms.build(name:form_name)
         form_obj.save
+        filed_dates=params[:properties]
+        filed_dates=JSON.parse(filed_dates)
+        filed_dates.each do |filed_date|
+            filed_name=filed_date["name"]
+            filed_label=filed_date["label"]
+            filed_type=filed_date["type"]
+            value_content=filed_date["value"]
+            extra_data=filed_date
+            
+            filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data)
+            filed_obj.save
 
-        filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type)
-        filed_obj.save
-
-        value_obj=filed_obj.values.build(content:value_content,userid:current_user.id).save
-        if filed_obj
-            puts "保存成功"
-        else
-            puts "保存失败"
+            value_obj=filed_obj.values.build(content:value_content,userid:current_user.id).save
+            if filed_obj
+                puts "表单项保存成功"
+            else
+                puts "表单项保存失败"
+            end
         end
-        puts "输出测试",filed_date,user_obj
+        puts "表单创建完成",filed_dates,filed_dates.class
     end
     
 
