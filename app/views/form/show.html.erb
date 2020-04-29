@@ -1,0 +1,16 @@
+<div>
+
+<% @forms.each do |f| %>
+    <ul>表单名
+     <%=  f.name %>
+     <form name="myform" method="post" action="/edit">
+        <input type="submit" value="修改"/>
+        <input type="hidden"  name="form_id" value= <%= f.id%>/>
+    </form>
+    </ul>
+    <ul>创建时间
+    <%=f.created_at%>
+    </ul>
+<% end %>
+
+</div>

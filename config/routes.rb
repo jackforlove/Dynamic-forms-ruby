@@ -11,11 +11,12 @@ Rails.application.routes.draw do
   draw :api
   root  "form#home"
   # root to: 'user_sessions#login'
-  match '/first',to:'test#first',via: "post"
+  match '/first',to:'test#first',via: "get"
   match '/new',to:'form#new',via:'get'
   match '/create', to:'form#create',via: 'post'
-  match '/edit',to: 'form#edit',via:'get'
+  match '/edit',to: 'form#edit',via:'post'
 
+  get '/show',to:'form#show'
   get '/login',to:'user_sessions#login'
   get '/auth/:provider/callback', :to => 'user_sessions#create'
   get '/auth/failure', :to => 'user_sessions#failure'

@@ -2,11 +2,4 @@
 <label for="num_tag">输入数字</label>
 <%= text_field_tag :num_tag,params[:num_tag]%>
 <%= submit_tag "走起"%>
-<br>
-<label><%=@first%>----<%=@second%></label>
-<ul>
-<% @x.each do |single| %>
-    <li><%= single%></li>
-<% end %>
-</ul>
 <%end%>

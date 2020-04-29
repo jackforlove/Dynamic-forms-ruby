@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script type="text/javascript" src='/jquery.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+  <!--<script src="/form-builder.min.js" type="text/javascript"></script>-->
+  <!--<script src="app/assets/javascripts/form-render.min.js" type="text/javascript"></script>-->
+</head>
+<body>
+<div id="fb_editor">
+
+</div>
+</body>
+
+<script>
+    $(document).ready(function(){
+        var fbTemplate = document.getElementById('fb_editor');
+        var formData =  '<%= raw @json_form%>'
+        var options ={ 
+            i18n: {
+                locale: "zh-CN"
+                //location: 'http://languagefile.url/directory/'
+                //extension: '.ext'
+                //preloaded: {
+                //    'en-US': {...}
+                //}
+            },
+            stickyControls: {
+                enable: true
+            },
+            fieldRemoveWarn: true,
+            fields: [
+                {
+                    label: "数值",
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'number'
+                    },
+                    icon: '🔢'
+                },
+                {
+                    label: "输入框",
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'text'
+                    },
+                    icon: '📝'
+                },
+                {
+                    label:'文本框',
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'textarea'
+                    },
+                    icon: '📃'
+                },
+                {
+                    label: '下拉框',
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'select'
+                    },
+                    icon: '🔘'
+                },
+                {
+                    label: '文件上传',
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'file'
+                    },
+                    icon: '🗄'
+                },
+                {
+                    label: '日期字段',
+                    className: "form-control custom",
+                    attrs: {
+                        type: 'date'
+                    },
+                    icon: '📅'
+                },
+            ],
+            disableFields: ['autocomplete', 'button', 'header', 'hidden', 'paragraph', 'number', 'textarea', 'text', 'radio-group', 'checkbox-group', 'date', 'file', 'select'],
+            actionButtons: [{
+                id: 'saveForm',
+                className: 'btn btn-success',
+                label: '提交',
+                type: 'button',
+                events: {
+                    click: function () {
+                        $.ajax({
+                            url: "/create",
+                            data: {
+                                properties: formBuilder.actions.getData("json", true)
+                            },
+                            method: "post"
+                        }).done(function (result) {
+                            if (result.errcode == 0) {
+                                swal({
+                                    title: result.errmsg
+                                }, function(){
+                                    window.location.reload();
+                                });
+                            } else {
+                                swal({
+                                    title: "保存失败",
+                                    text: result.errmsg
+                                })
+                            }
+                        })
+                    }
+                },
+                disabledAttrs: [
+                    'value'
+                ]
+            }],
+            disabledActionButtons: ['data', 'save'],
+            dataType: "json",
+            formData: formData
+        };
+        var formBuilder = $(fbTemplate).formBuilder(options);
+    });
+</script>
+</html>
