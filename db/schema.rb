@@ -31,6 +31,8 @@ ActiveRecord::Schema.define(version: 2020_04_28_040337) do
     t.boolean "repeat"
     t.boolean "is_case"
     t.text "extra"
+    t.string "label"
+    t.string "f_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -44,14 +46,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_040337) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "papers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "conetent"
-    t.integer "test_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["test_id"], name: "index_papers_on_test_id"
-  end
-
   create_table "settings", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "var", null: false
     t.text "value"
@@ -60,13 +54,6 @@ ActiveRecord::Schema.define(version: 2020_04_28_040337) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
-  end
-
-  create_table "tests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "name"
-    t.integer "age"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

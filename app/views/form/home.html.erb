@@ -1,6 +1,20 @@
 <div>
 <p >动态表单
 </p>
-<%= link_to '创建表单', new_path %>
-<%= link_to '编辑表单', edit_path %>
+
+<% if signed_in? %>
+     <p>欢迎您</p>
+     <%= current_user.name%>
+     <p>
+     <%= link_to '退出',logout_path%></p>
+     <div>
+     <tr><%= link_to '创建表单', new_path %></tr>
+<tr><%= link_to '编辑表单', edit_path %></tr>
+     </div>
+<% else %>
+    <%= link_to '登陆' , login_path%>
+<% end %>
+<ul>
+
+</ul>
 </div>

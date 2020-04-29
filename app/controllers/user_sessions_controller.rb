@@ -15,9 +15,10 @@ class UserSessionsController < ApplicationController
 
     # if user.present?
     user = save_user_info(omniauth)
-    session[:uuid] = user_info['uid']
+    p 2323232, omniauth['uid']
+    session[:uuid] = omniauth['uid']
     # 前端新项目放在这里
-    path = "/fronts/#/login?token=#{user.access_token}"
+    path = root_path
 
     redirect_to(path)
   end

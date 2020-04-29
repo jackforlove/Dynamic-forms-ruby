@@ -2,6 +2,7 @@ module Authable
   extend ActiveSupport::Concern
   included do
     helper_method :current_user
+    helper_method :signed_in?
   end
 
   def set_default_values
@@ -47,6 +48,7 @@ module Authable
   end
 
   def current_user
+    # p 1111,  session[:uuid]
     return nil unless session[:uuid]
     @current_user ||= User.find_by(uuid: session[:uuid])
 

@@ -8,6 +8,8 @@ class CreateFileds < ActiveRecord::Migration[5.2]
       t.boolean :repeat
       t.boolean :is_case
       t.text :extra
+      t.string :label
+      t.string :f_type
 
       t.timestamps
     end

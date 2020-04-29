@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   match '/create', to:'form#create',via: 'post'
   match '/edit',to: 'form#edit',via:'get'
 
+  get '/login',to:'user_sessions#login'
   get '/auth/:provider/callback', :to => 'user_sessions#create'
   get '/auth/failure', :to => 'user_sessions#failure'
   get '/logout', :to => 'user_sessions#logout'
