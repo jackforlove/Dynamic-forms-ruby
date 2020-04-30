@@ -82,11 +82,20 @@ class FormController < ApplicationController
         value_list=[]
         filed_dates.each do|f|
             must_in=f["required"]
+            min=f["min"]
+            max=f["max"]
             value=f["value"]
             value_list.push(value)
+            puts "-------值得长度----",min.class
             if must_in
                 return unless !value.nil?
             end
+
+            if min && max && min <= max 
+                return unless value.length >= min && value.length <= max
+            end
+
+
         end
         form_obj.fileds.find_each do|x|
             if value_list
