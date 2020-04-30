@@ -1,10 +1,15 @@
-<div>
+<% provide(:xx ,"我的表单") %>
+<div class="row">
 
 <% @forms.each do |f| %>
     <ul>表单名
      <%=  f.name %>
-     <form name="myform" method="post" action="/edit">
+     <form name="change" method="post" action="/edit">
         <input type="submit" value="修改"/>
+        <input type="hidden"  name="form_id" value= <%= f.id%>/>
+    </form>
+    <form name="del" method="post" action="/del">
+        <input type="submit" value="删除"/>
         <input type="hidden"  name="form_id" value= <%= f.id%>/>
     </form>
     </ul>
@@ -12,5 +17,4 @@
     <%=f.created_at%>
     </ul>
 <% end %>
-
 </div>

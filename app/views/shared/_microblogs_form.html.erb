@@ -1,0 +1,7 @@
+<%= form_for(@microblog) do |f| %>
+ <%= render  "shared/error_messages",object: f.object%>
+ <div class="field">
+<%= f.text_area :content, placeholder: "创建新的微博" %>
+</div>
+<%= f.submit "提交",class:"btn btn-large btn-primary"%>
+<% end %>
