@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>动态表单|编辑</title>
+  <title>动态表单|填写</title>
   <script type="text/javascript" src='/jquery.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
@@ -11,8 +11,7 @@
 </head>
 <body>
 <div id="fb_editor">
-<p><%= @form_id%></p>
-<h1>表单编辑</h1>
+<h1>表单填写</h1>
 </div>
 </body>
 
@@ -32,57 +31,57 @@
             stickyControls: {
                 enable: true
             },
-            fieldRemoveWarn: true,
-            fields: [
-                {
-                    label: "数值",
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'number'
-                    },
-                    icon: '🔢'
-                },
-                {
-                    label: "输入框",
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'text'
-                    },
-                    icon: '📝'
-                },
-                {
-                    label:'文本框',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'textarea'
-                    },
-                    icon: '📃'
-                },
-                {
-                    label: '下拉框',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'select'
-                    },
-                    icon: '🔘'
-                },
-                {
-                    label: '文件上传',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'file'
-                    },
-                    icon: '🗄'
-                },
-                {
-                    label: '日期字段',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'date'
-                    },
-                    icon: '📅'
-                },
-            ],
+        //     fieldRemoveWarn: true,
+            // fields: [
+            //     {
+            //         label: "数值",
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'number'
+            //         },
+            //         icon: '🔢'
+            //     },
+            //     {
+            //         label: "输入框",
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'text'
+            //         },
+            //         icon: '📝'
+            //     },
+            //     {
+            //         label:'文本框',
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'textarea'
+            //         },
+            //         icon: '📃'
+            //     },
+            //     {
+            //         label: '下拉框',
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'select'
+            //         },
+            //         icon: '🔘'
+            //     },
+            //     {
+            //         label: '文件上传',
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'file'
+            //         },
+            //         icon: '🗄'
+            //     },
+            //     {
+            //         label: '日期字段',
+            //         className: "form-control custom",
+            //         attrs: {
+            //             type: 'date'
+            //         },
+            //         icon: '📅'
+            //     },
+            // ],
             disableFields: ['autocomplete', 'button', 'header', 'hidden', 'paragraph', 'number', 'textarea', 'text', 'radio-group', 'checkbox-group', 'date', 'file', 'select'],
             actionButtons: [{
                 id: 'saveForm',
@@ -92,7 +91,7 @@
                 events: {
                     click: function () {
                         $.ajax({
-                            url: "/update",
+                            url: "/save",
                             data: {
                                 properties: formBuilder.actions.getData("json", true)
                             },
@@ -113,9 +112,9 @@
                         })
                     }
                 },
-                disabledAttrs: [
-                    'value'
-                ]
+                // disabledAttrs: [
+                //     'value'
+                // ]
             }],
             disabledActionButtons: ['data', 'save'],
             dataType: "json",

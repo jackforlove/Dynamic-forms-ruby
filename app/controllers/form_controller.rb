@@ -2,6 +2,7 @@ require 'rubygems'
 require 'json'
 class FormController < ApplicationController
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
+    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit]
     protect_from_forgery :only => :index
     def home
     end
@@ -23,7 +24,7 @@ class FormController < ApplicationController
     end
     
     def create
-        form_name=Time.now
+        form_name=current_user.name+ Time.now.to_i.to_s[6..10]
         user_obj=User.find(current_user.id)
         session[:user_obj]=user_obj
         form_obj=user_obj.forms.build(name:form_name)
@@ -39,16 +40,14 @@ class FormController < ApplicationController
         # user_obj.forms.find_each do|form|
         @form_id=params[:form_id].to_i
         session[:form_id] = @form_id
-        form=Form.find(params[:form_id].to_i)
+        form=Form.find(@form_id)
         puts form.name,"-----表单------"
         forms_list=[]
         form.fileds.find_each do|filed|
             s=eval(filed.extra)
             forms_list.push(s)
-            puts s.class
         end
         @json_form= JSON.generate(forms_list)
-        filed_dates=params[:properties]
         # end
     end
 
@@ -56,9 +55,49 @@ class FormController < ApplicationController
         # form_name=Time.now
         # user_obj=User.find(current_user.id)
         form_obj=Form.find(session[:form_id])
+        form_obj.fileds.find_each do|x|
+            x.extra=nil
+            x.save
+        end
         filed_dates=params[:properties]
         filed_save(filed_dates,form_obj)
     end
+
+    def fill
+        form_id=params[:form_id].to_i
+        session[:form_id] = form_id
+        form=Form.find(form_id)
+        forms_list=[]
+        form.fileds.find_each do|filed|
+            s=eval(filed.extra)
+            forms_list.push(s)
+        end
+        @json_form= JSON.generate(forms_list)
+    end
+    
+    def save
+        filed_dates=params[:properties]
+        filed_dates=JSON.parse(filed_dates)
+        form_obj=Form.find(session[:form_id])
+        value_list=[]
+        filed_dates.each do|f|
+            must_in=f["required"]
+            value=f["value"]
+            value_list.push(value)
+            if must_in
+                return unless !value.nil?
+            end
+        end
+        form_obj.fileds.find_each do|x|
+            if value_list
+                n=value_list[0]
+                x.values.build(content:n,userid:current_user.id).save
+                value_list.delete(n)
+            end
+        end
+        redirect_to show_path
+    end
+    
 
     def filed_save(filed_dates,form_obj)
         filed_dates=JSON.parse(filed_dates)
@@ -66,21 +105,21 @@ class FormController < ApplicationController
             filed_name=filed_date["name"]
             filed_label=filed_date["label"]
             filed_type=filed_date["type"]
-            value_content=filed_date["value"]
             extra_data=filed_date
-            
-            filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data)
-            filed_obj.save
-
-            value_obj=filed_obj.values.build(content:value_content,userid:current_user.id).save
+            if extra_data.has_key?("value")
+              extra_data["value"]=nil
+            end
+            filed_obj=form_obj.fileds.find_by(name:filed_name)
             if filed_obj
-                puts "表单项保存成功"
-                
+                filed_obj.update(extra:extra_data)
             else
-                puts "表单项保存失败"
+                filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save  
             end
         end
         redirect_to show_path
-        puts "表单创建完成",filed_dates
+    end
+    private
+    def signed_confirmation
+        redirect_to root_path unless signed_in?   
     end
 end

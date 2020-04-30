@@ -14,10 +14,12 @@ Rails.application.routes.draw do
   match '/first',to:'test#first',via: "get"
   match '/new',to:'form#new',via:'get'
   match '/create', to:'form#create',via: 'post'
-  match '/edit',to: 'form#edit',via:'post'
+  match '/edit',to: 'form#edit',via:'get'
   match '/update',to:'form#update',via:'post'
 
-  post '/del',to:'form#del'
+  get '/del',to:'form#del'
+  post '/save',to:'form#save'
+  get '/fill',to:'form#fill'
   get '/show',to:'form#show'
   get '/login',to:'user_sessions#login'
   get '/auth/:provider/callback', :to => 'user_sessions#create'

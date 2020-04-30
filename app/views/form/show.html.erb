@@ -2,19 +2,16 @@
 <div class="row">
 
 <% @forms.each do |f| %>
-    <ul>表单名
-     <%=  f.name %>
-     <form name="change" method="post" action="/edit">
-        <input type="submit" value="修改"/>
-        <input type="hidden"  name="form_id" value= <%= f.id%>/>
-    </form>
-    <form name="del" method="post" action="/del">
-        <input type="submit" value="删除"/>
-        <input type="hidden"  name="form_id" value= <%= f.id%>/>
-    </form>
-    </ul>
-    <ul>创建时间
+    <h3>表单名：
+     <%=  f.name %></h3>
+    <p>创建时间：
     <%=f.created_at%>
-    </ul>
+    </p>
+    <p>更新时间：
+    <%=f.updated_at%>
+    </p>
+    <%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+    <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
+    <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%>
 <% end %>
 </div>
