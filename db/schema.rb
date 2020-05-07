@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_28_040337) do
+ActiveRecord::Schema.define(version: 2020_05_07_020433) do
 
   create_table "api_keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -54,6 +54,20 @@ ActiveRecord::Schema.define(version: 2020_04_28_040337) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true
+  end
+
+  create_table "user_data", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name"
+    t.string "date"
+    t.string "file"
+    t.string "number"
+    t.string "select"
+    t.string "text"
+    t.string "textarea"
+    t.integer "form_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "uid"
   end
 
   create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|

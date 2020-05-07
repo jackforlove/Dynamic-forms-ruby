@@ -17,6 +17,10 @@ Rails.application.routes.draw do
   match '/edit',to: 'form#edit',via:'get'
   match '/update',to:'form#update',via:'post'
 
+  get '/form_link',to:'form#form_link'
+  get '/qrcode',to:'form#qrcode'
+  get '/deldata',to:'form#del_data'
+  get '/userdate',to:'form#user_date'
   get '/del',to:'form#del'
   post '/save',to:'form#save'
   get '/fill',to:'form#fill'

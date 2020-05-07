@@ -20,7 +20,7 @@ class FormController < ApplicationController
 
     def show
         user_obj=User.find(current_user.id)
-        @forms=user_obj.forms
+        @forms = user_obj.forms.order(:created_at).page(params[:page]).per(3)
     end
     
     def create
@@ -70,6 +70,7 @@ class FormController < ApplicationController
         forms_list=[]
         form.fileds.find_each do|filed|
             s=eval(filed.extra)
+            puts "---------",filed.extra
             forms_list.push(s)
         end
         @json_form= JSON.generate(forms_list)
@@ -79,14 +80,24 @@ class FormController < ApplicationController
         filed_dates=params[:properties]
         filed_dates=JSON.parse(filed_dates)
         form_obj=Form.find(session[:form_id])
-        value_list=[]
+        value_list={}
         filed_dates.each do|f|
+            type=f["type"]
             must_in=f["required"]
             min=f["min"]
             max=f["max"]
             value=f["value"]
-            value_list.push(value)
-            puts "-------值得长度----",min.class
+            subtype = f["subtype"]
+            values=f["values"]
+            if !values
+                value_list[type]=value
+            else
+                values.each do|v|
+                    if v["selected"]
+                        value_list[type]=v["value"]
+                    end
+                end
+            end
             if must_in
                 return unless !value.nil?
             end
@@ -95,15 +106,20 @@ class FormController < ApplicationController
                 return unless value.length >= min && value.length <= max
             end
 
+            if subtype == "password" 
+                return unless value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/
+            end
 
-        end
-        form_obj.fileds.find_each do|x|
-            if value_list
-                n=value_list[0]
-                x.values.build(content:n,userid:current_user.id).save
-                value_list.delete(n)
+            if subtype == "tel"
+            end
+
+            if subtype == "email"
+                return unless value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
             end
         end
+        puts "-------值得长度----",value_list
+        tmp=form_obj.user_datums.new(uid:current_user.id)
+        tmp.update(value_list)
         redirect_to show_path
     end
     
@@ -126,6 +142,24 @@ class FormController < ApplicationController
             end
         end
         redirect_to show_path
+    end
+
+    def user_date
+        form_id=params[:form_id]
+        session[:form_id]=form_id.to_i
+        @datas=Form.find(form_id).user_datums
+    end
+
+    def del_data
+        value_id=params[:value_id].to_i
+        if UserDatum.find(value_id).destroy
+            redirect_to 'http://localhost:3000/userdate?form_id='+session[:form_id].to_s
+        end
+    end
+
+    def qrcode
+    end
+    def form_link
     end
     private
     def signed_confirmation

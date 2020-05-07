@@ -1,17 +1,35 @@
 <% provide(:xx ,"我的表单") %>
-<div class="row">
+<div  class="center hero-unit">
+
+<div>
+<h1>创建的表单</h1>
+</div>
+<%= paginate(@forms) %>
 
 <% @forms.each do |f| %>
-    <h3>表单名：
-     <%=  f.name %></h3>
-    <p>创建时间：
-    <%=f.created_at%>
-    </p>
-    <p>更新时间：
-    <%=f.updated_at%>
-    </p>
-    <%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+<table border ="2" class="survey-items">
+<tr>
+    <th>表单名</th>
+     <th>创建者</th>
+    <th>创建时间</th>
+    <th>更新时间</th>
+        </tr>
+        <tr>
+        <th> <%=  f.name %></th>
+        <th> <%=f.user.name%></th>
+        <th> <%=f.created_at%></th>
+        <th><%=f.updated_at%></th>
+        </tr>
+        <tr>
+        <th><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
     <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
-    <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%>
+   <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%>
+    <%= link_to '查看数据',userdate_path(form_id:f.id,controller: 'form' , action: 'user_date')%></th>
+        </tr>
+</table>
+
 <% end %>
+
+<%= paginate(@forms) %>
 </div>
+

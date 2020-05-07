@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  date: MyString
+  file: MyString
+  num: 1
+  pull: MyString
+  input: MyString
+  txt: MyString
+
+two:
+  name: MyString
+  date: MyString
+  file: MyString
+  num: 1
+  pull: MyString
+  input: MyString
+  txt: MyString

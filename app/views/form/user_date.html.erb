@@ -1,0 +1,35 @@
+<% provide(:xx ,"主页") %>
+<div  class="center hero-unit">
+
+<% @datas.each do |f| %>
+<table border ="2" class="survey-items">
+<tr>
+    <th>表单名</th>
+     <th>填写者</th>
+    <th>创建日期</th>
+    <th>日期</th>
+    <th>文件</th>
+    <th>数值</th>
+    <th>下拉</th>
+    <th>输入框</th>
+    <th>文本框</th>
+
+        </tr>
+        <tr>
+        <th> <%=  f.name %></th>
+        <th> <%=User.find(f.uid.to_i).name%></th>
+        <th> <%=f.created_at%></th>
+        <th><%=f.date%></th>
+        <th><%=f.file%></th>
+        <th><%=f.number%></th>
+        <th><%=f.select%></th>
+        <th><%=f.text%></th>
+        <th><%=f.textarea%></th>
+        </tr>
+        <tr>
+
+    <th><%= link_to '删除',deldata_path(value_id:f.id,controller: 'form' , action: 'deldata')%><tr>
+        </tr>
+</table>
+<% end %>
+</div>

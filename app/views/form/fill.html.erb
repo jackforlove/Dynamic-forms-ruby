@@ -12,6 +12,9 @@
 <body>
 <div id="fb_editor">
 <h1>表单填写</h1>
+<div id="qrcode"></div>
+<p>想要分享给别人？</p>
+<a id="b1" onclick="onClickB1()">分享表单链接</a>
 </div>
 </body>
 
@@ -97,6 +100,44 @@
                             },
                             method: "post"
                         }).done(function (result) {
+                            var x=formBuilder.actions.getData("json", true)
+                            // alert(x);
+                            x=eval( x)
+                            
+                            for(var i=0;i<x.length;i++)
+                            {
+                                var must_in=x[i]["required"]
+                                var value=x[i]["value"]
+                                var max=x[i]["max"]
+                                var mix=x[i]["mix"]
+                                var subtype=x[i]["subtype"]
+                                // alert(!(/^1[3456789]\d{9}$/.test( parseInt(value))));
+                                if (must_in && !value)
+                                {
+                                    result.errcode == 2 
+                                }
+
+                                if(min && max && min <= max && !(value.length >= min && value.length <= max))  
+                                {
+                                     result.errcode == 2 
+                                } 
+
+                                if(subtype == "password" && !(value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/) )
+                                {
+                                    result.errcode == 2
+                                }
+                                
+                                if (subtype == "tel" && !(/^1[3456789]\d{9}$/.test( parseInt(value))))
+                                {
+                                    result.errcode == 2
+                                }
+
+                                if (subtype == "email" && !(value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/))
+                                {
+                                    result.errcode == 2
+                                }
+
+                            }
                             if (result.errcode == 0) {
                                 swal({
                                     title: result.errmsg
@@ -122,5 +163,13 @@
         };
         var formBuilder = $(fbTemplate).formBuilder(options);
     });
+    function onClickB1() {
+            prompt("复制下来分享给别人吧",window.location.href);
+    }
+    thisURL = document.URL;  
+    strwrite = 
+    "<img src='https://chart.googleapis.com/chart?cht=qr&chs=150x150&choe=UTF-8&chld=L|4&chl="
+    + thisURL + "' width='150' height='150' alt= #{window.location.href}/>"; 
+    document.write( strwrite );  
 </script>
 </html>
