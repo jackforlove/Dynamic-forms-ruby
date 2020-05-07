@@ -9,22 +9,22 @@
 <% @forms.each do |f| %>
 <table border ="2" class="survey-items">
 <tr>
-    <th>表单名</th>
-     <th>创建者</th>
-    <th>创建时间</th>
-    <th>更新时间</th>
+    <th><p>表单名</p></th>
+     <th><P>创建者</p></th>
+    <th><p>创建时间</p></th>
+    <th><p>更新时间</p></th>
         </tr>
         <tr>
-        <th> <%=  f.name %></th>
-        <th> <%=f.user.name%></th>
-        <th> <%=f.created_at%></th>
-        <th><%=f.updated_at%></th>
+        <th><p> <%=  f.name %></p></th>
+        <th> <p><%=f.user.name%></p></th>
+        <th> <p><%=f.created_at%></p></th>
+        <th><p><%=f.updated_at%></p></th>
         </tr>
         <tr>
-        <th><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+        <th><p><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
     <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
    <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%>
-    <%= link_to '查看数据',userdate_path(form_id:f.id,controller: 'form' , action: 'user_date')%></th>
+    <%= link_to '查看数据',userdate_path(form_id:f.id,controller: 'form' , action: 'user_date')%></p></th>
         </tr>
 </table>
 
