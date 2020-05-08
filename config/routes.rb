@@ -12,15 +12,18 @@ Rails.application.routes.draw do
   root  "form#home"
   # root to: 'user_sessions#login'
   match '/first',to:'test#first',via: "get"
-  match '/new',to:'form#new',via:'get'
+  match '/before_new',to:'form#before_new',via:'get'
+  match '/new',to:'form#new',via:'post'
   match '/create', to:'form#create',via: 'post'
   match '/edit',to: 'form#edit',via:'get'
   match '/update',to:'form#update',via:'post'
 
-  get '/form_link',to:'form#form_link'
+
+  get '/detail_form_user',to:'form#detail_form_user'
+  get '/form_link',to:'form#form_link'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
   get '/qrcode',to:'form#qrcode'
-  get '/deldata',to:'form#del_data'
-  get '/userdate',to:'form#user_date'
+  get '/deldata',to:'form#del_data'                                                                                                                                                                                         
+  get '/userdate',to:'form#user_date'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   get '/del',to:'form#del'
   post '/save',to:'form#save'
   get '/fill',to:'form#fill'

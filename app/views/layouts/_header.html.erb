@@ -6,7 +6,6 @@
 <ul class="nav pull-right">
 <li><%= link_to "个人主页" ,root_path %></li>
 <% if signed_in? %>
-    <li><%= link_to '创建表单', new_path %></li>
 <li><%= link_to '我的表单', show_path %></li>
 <li><%= link_to "注销", logout_path %>
  <li style='background:#999'> <%= current_user.name%></li>

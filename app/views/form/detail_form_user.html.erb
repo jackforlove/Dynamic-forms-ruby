@@ -1,0 +1,21 @@
+<div  class="center hero-unit">
+<h2 style="color:rgb(128, 128, 128)"><%= @form.name%></h2>
+<table class="table table-strip">
+<tr>
+<th>字段类型</th>
+<th></th>
+<th>数据名称</th>
+<th></th>
+<th>数据内容</th>
+</tr>
+ <%@form.fileds.each do|x|%>
+ <tr>
+ <td><%=x.label%><td>
+      <td>  <%=x.name%><td>
+        <%x.values.each do |v|%>
+      <td>  <%=v.content%> <td>
+      <tr>
+        <%end%>
+        <%end%>
+        </table>
+        </div>

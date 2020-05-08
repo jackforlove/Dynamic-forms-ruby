@@ -6,7 +6,7 @@ html {
 body{
     padding-top: 60px;
     color: #333;
-    text-align: center;
+    // text-align: center;
 }
 table {margin: auto;}
 section{
@@ -198,9 +198,12 @@ input{
     }
     }
 .survey-items {
-    background: #c2c3c3;
+    background: rgb(149, 171, 182);
     border-radius: 2px;
     margin-bottom: 20px;
-    box-shadow: 0px 0px 4px 0px #F0F0F0;
-    border: 1px solid #E6E6E6;
+    box-shadow: 0px 0px 4px 0px rgb(131, 124, 199);
+    border: 1px solid rgb(113, 152, 211);
+}
+.mxl{
+   color:rgb(199, 197, 197)
 }

@@ -1,0 +1,10 @@
+<% provide(:xx ,"主页") %>
+<div class="center hero-unit">
+<%=form_tag controller:"form",action:"new",method: "post",remote: true do %>
+<label for="form_name" required>表单名字*</label>
+<%= text_field_tag :form_name,params[:form_name]%>
+<label for="form_note">表单备注</label>
+<%= text_field_tag :form_note,params[:form_note]%>
+<%= submit_tag "走起"%>
+<%end%>
+</div>

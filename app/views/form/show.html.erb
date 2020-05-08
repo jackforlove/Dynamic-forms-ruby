@@ -2,34 +2,36 @@
 <div  class="center hero-unit">
 
 <div>
-<h1>创建的表单</h1>
+<h2 style="color:rgb(128, 128, 128)">创建的表单</h2>
 </div>
+<span class="pull-left"><%= link_to '创建表单', before_new_path %>
+</span>
 <%= paginate(@forms) %>
-
-<% @forms.each do |f| %>
-<table border ="2" class="survey-items">
+<table class="table table-strip">
 <tr>
-    <th><p>表单名</p></th>
-     <th><P>创建者</p></th>
-    <th><p>创建时间</p></th>
-    <th><p>更新时间</p></th>
+    <th >表单名</th>
+     <th >创建者</th>
+    <th>创建时间</th>
+    <th>更新时间</th>
+    <th>填写份数</th>
+    <th>备注</th>
         </tr>
+     
+<% @forms.each do |f| %>
         <tr>
-        <th><p> <%=  f.name %></p></th>
-        <th> <p><%=f.user.name%></p></th>
-        <th> <p><%=f.created_at%></p></th>
-        <th><p><%=f.updated_at%></p></th>
-        </tr>
-        <tr>
-        <th><p><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+        <td><%=  f.name %></td>
+        <td> <%=f.user.name%></td>
+        <td> <%=f.created_at%></td>
+        <td><%=f.updated_at%></td>
+         <td><%=f.form_users.count%></td>
+         <td><%=f.notes%></td>
+        <td><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
     <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
    <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%>
-    <%= link_to '查看数据',userdate_path(form_id:f.id,controller: 'form' , action: 'user_date')%></p></th>
+    <%= link_to '查看数据',userdate_path(form_id:f.id,controller: 'form' , action: 'user_date')%></td>
         </tr>
-</table>
-
 <% end %>
-
+</table>
 <%= paginate(@forms) %>
 </div>
 

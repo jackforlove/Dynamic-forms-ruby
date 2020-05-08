@@ -32,7 +32,7 @@
                 //}
             },
             stickyControls: {
-                enable: true
+                enable: false
             },
         //     fieldRemoveWarn: true,
             // fields: [
@@ -93,64 +93,107 @@
                 type: 'button',
                 events: {
                     click: function () {
-                        $.ajax({
-                            url: "/save",
-                            data: {
-                                properties: formBuilder.actions.getData("json", true)
-                            },
-                            method: "post"
-                        }).done(function (result) {
-                            var x=formBuilder.actions.getData("json", true)
-                            // alert(x);
-                            x=eval( x)
+                        
+                        var x=formBuilder.actions.getData("json", true)
+                        // alert(x);
+                        x=eval( x)
+                        var tag=0
+                        
+                        for(var i=0;i<x.length;i++)
+                        {
+                            var must_in=x[i]["required"] 
+                            var value=x[i]["value"]
+                            var max=x[i]["max"]
+                            var min=x[i]["mix"] 
+                            var subtype=x[i]["subtype"]
                             
-                            for(var i=0;i<x.length;i++)
+                            if (must_in && !value)
                             {
-                                var must_in=x[i]["required"]
-                                var value=x[i]["value"]
-                                var max=x[i]["max"]
-                                var mix=x[i]["mix"]
-                                var subtype=x[i]["subtype"]
-                                // alert(!(/^1[3456789]\d{9}$/.test( parseInt(value))));
-                                if (must_in && !value)
-                                {
-                                    result.errcode == 2 
-                                }
+                                tag = 2 
+                            }
+           
+                            if(min && max && min <= max && !(value.length >= min && value.length <= max))  
+                            {
+                                    tag =2 
+                            } 
+                            
+                            if(subtype == "password" && !(value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/) )
+                            {
+                                tag = 2
+                            }
+                            
+                            if (subtype == "tel" && !(/^1[3456789]\d{9}$/.test( parseInt(value))))
+                            {
+                                tag = 2
+                            }
 
-                                if(min && max && min <= max && !(value.length >= min && value.length <= max))  
-                                {
-                                     result.errcode == 2 
-                                } 
-
-                                if(subtype == "password" && !(value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/) )
-                                {
-                                    result.errcode == 2
-                                }
+                            if (subtype == "email" && !(value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/))
+                            {
+                                tag = 2
+                            }
+                           
+                        }
+                        
+                        if (tag == 0){
+                            $.ajax({
+                                url: "/save",
+                                data: {
+                                    properties: formBuilder.actions.getData("json", true)
+                                },
+                                method: "post"
+                            }).done(function (result) {
+                                // var x=formBuilder.actions.getData("json", true)
+                                // // alert(x);
+                                // x=eval( x)
                                 
-                                if (subtype == "tel" && !(/^1[3456789]\d{9}$/.test( parseInt(value))))
-                                {
-                                    result.errcode == 2
-                                }
+                                // for(var i=0;i<x.length;i++)
+                                // {
+                                //     var must_in=x[i]["required"]
+                                //     var value=x[i]["value"]
+                                //     var max=x[i]["max"]
+                                //     var mix=x[i]["mix"]
+                                //     var subtype=x[i]["subtype"]
+                                //     // alert(!(/^1[3456789]\d{9}$/.test( parseInt(value))));
+                                //     if (must_in && !value)
+                                //     {
+                                //         result.errcode = 2 
+                                //     }
 
-                                if (subtype == "email" && !(value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/))
-                                {
-                                    result.errcode == 2
-                                }
+                                //     if(min && max && min <= max && !(value.length >= min && value.length <= max))  
+                                //     {
+                                //          result.errcode =2 
+                                //     } 
 
-                            }
-                            if (result.errcode == 0) {
-                                swal({
-                                    title: result.errmsg
-                                }, function(){
-                                    window.location.reload();
-                                });
-                            } else {
-                                swal({
-                                    title: "保存失败",
-                                    text: result.errmsg
-                                })
-                            }
-                        })
+                                //     if(subtype == "password" && !(value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/) )
+                                //     {
+                                //         result.errcode = 2
+                                //     }
+                                    
+                                //     if (subtype == "tel" && !(/^1[3456789]\d{9}$/.test( parseInt(value))))
+                                //     {
+                                //         result.errcode = 2
+                                //     }
+
+                                //     if (subtype == "email" && !(value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/))
+                                //     {
+                                //         result.errcode = 2
+                                //     }
+
+                                // }
+                                if (result.errcode == 0) {
+                                    swal({
+                                        title: result.errmsg
+                                    }, function(){
+                                        window.location.reload();
+                                    });
+                                } else {
+                                    swal({
+                                        title: "保存失败",
+                                        text: result.errmsg
+                                    })
+                                }
+                            })
+                        }
                     }
                 },
                 // disabledAttrs: [

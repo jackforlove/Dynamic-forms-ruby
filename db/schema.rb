@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_07_020433) do
+ActiveRecord::Schema.define(version: 2020_05_07_095332) do
 
   create_table "api_keys", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "user_id"
@@ -33,6 +33,13 @@ ActiveRecord::Schema.define(version: 2020_05_07_020433) do
     t.text "extra"
     t.string "label"
     t.string "f_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "form_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "form_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -96,7 +103,7 @@ ActiveRecord::Schema.define(version: 2020_05_07_020433) do
   create_table "values", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "filed_id"
     t.string "content"
-    t.integer "userid"
+    t.integer "form_user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

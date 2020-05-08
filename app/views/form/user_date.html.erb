@@ -1,35 +1,25 @@
 <% provide(:xx ,"主页") %>
 <div  class="center hero-unit">
-
-<% @datas.each do |f| %>
-<table border ="2" class="survey-items">
+<h2 style="color:rgb(128, 128, 128)">填写的表单</h2>
+<%= paginate(@datas) %>
+<%if @datas.length>=1%>
+<table  class="table table-strip">
 <tr>
-    <th>表单名</th>
-     <th>填写者</th>
-    <th>创建日期</th>
-    <th>日期</th>
-    <th>文件</th>
-    <th>数值</th>
-    <th>下拉</th>
-    <th>输入框</th>
-    <th>文本框</th>
-
-        </tr>
+   <th> 表单名</th> 
+   <th>填写者</th>
+    <th>     创建日期     </th>
+<% @datas.each do |f| %>
         <tr>
-        <th> <%=  f.name %></th>
-        <th> <%=User.find(f.uid.to_i).name%></th>
-        <th> <%=f.created_at%></th>
-        <th><%=f.date%></th>
-        <th><%=f.file%></th>
-        <th><%=f.number%></th>
-        <th><%=f.select%></th>
-        <th><%=f.text%></th>
-        <th><%=f.textarea%></th>
-        </tr>
-        <tr>
-
-    <th><%= link_to '删除',deldata_path(value_id:f.id,controller: 'form' , action: 'deldata')%><tr>
-        </tr>
-</table>
+        <td> <%=  f.form.name %></td>
+        <td> <%=f.user.name%></td>
+        <td> <%=f.created_at%></td>
+        <td><%= link_to '查看表单',detail_form_user_path(form_user_id:f.id,controller: 'form' , action: 'detail_form_user')%></td>
+    <td><%= link_to '删除',deldata_path(value_id:f.id,controller: 'form' , action: 'deldata')%></td>
+            </tr>
 <% end %>
+</table>
+<%else%>
+<h1 style="color:#999">没有数据哦！<h1>
+<%end%>
+<%= paginate(@datas) %>
 </div>
