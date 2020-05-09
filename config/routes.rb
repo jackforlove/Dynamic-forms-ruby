@@ -13,17 +13,17 @@ Rails.application.routes.draw do
   # root to: 'user_sessions#login'
   match '/first',to:'test#first',via: "get"
   match '/before_new',to:'form#before_new',via:'get'
-  match '/new',to:'form#new',via:'post'
+  match '/new',to:'form#new',via:'get'
   match '/create', to:'form#create',via: 'post'
   match '/edit',to: 'form#edit',via:'get'
   match '/update',to:'form#update',via:'post'
 
-
   get '/detail_form_user',to:'form#detail_form_user'
-  get '/form_link',to:'form#form_link'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+ post '/search',to:'form#search'  
+ post '/search_current',to:'form#search_current'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
   get '/qrcode',to:'form#qrcode'
   get '/deldata',to:'form#del_data'                                                                                                                                                                                         
-  get '/userdate',to:'form#user_date'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  get '/userdata',to:'form#user_data'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   get '/del',to:'form#del'
   post '/save',to:'form#save'
   get '/fill',to:'form#fill'

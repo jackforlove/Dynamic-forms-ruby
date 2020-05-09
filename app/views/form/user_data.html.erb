@@ -1,0 +1,31 @@
+<% provide(:xx ,"主页") %>
+<div  class="center hero-unit">
+<h1 style="color:rgb(149, 171, 182)">填写的表单
+</h1>
+<%if @datas.length>=1%>
+<table  class="table table-strip">
+<tr>
+   <th> 表单名</th> 
+   <th>填写者</th>
+    
+    <% @fields.each do |v| %>
+        <th><%=v.label%></th>
+    <% end %>
+<% @datas.each do |f| %>
+        <tr>
+        <td> <%=  @form.name %></td>
+        <td> <%=f.name%></td>
+        <%ls=[]%>
+        <%x=nil%>
+             <%@fields.each do |field|%>
+          <td ><%= f["key_" + field.id.to_s]%></td>
+          <%x=field%>
+        <% end%>
+    <td><%= link_to '删除',deldata_path(value_id:x.values.first.form_user.id,controller: 'form' , action: 'deldata')%></td>
+            </tr>
+<% end %>
+</table>
+<%else%>
+<h1 style="color:#999">没有数据哦！<h1>
+<%end%>
+</div>

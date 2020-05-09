@@ -1,5 +1,5 @@
 class FormUser < ApplicationRecord
     belongs_to :user ,optional:true
     belongs_to :form
-    has_many :values
+    has_many :values ,dependent: :destroy
 end

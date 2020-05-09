@@ -11,7 +11,8 @@
 </head>
 <body>
 <div id="fb_editor">
-<h1>新建表单</h1>
+<h1 style="color:rgb(149, 171, 182)">搭配字段
+</h1>
 </div>
 </body>
 
@@ -20,6 +21,17 @@
         var fbTemplate = document.getElementById('fb_editor');
         var formData = {};
         var options ={ 
+            defaultFields: [{
+        className: "form-control",
+        label: "表单标题",
+        placeholder: "输入表单的标题",
+        name: "title",
+        required: true,
+        type: "text",
+      }],
+      disabledFieldButtons: {
+          text: ['remove','edit','copy'],
+          },
             i18n: {
                 locale: "zh-CN"
                 //location: 'http://languagefile.url/directory/'
@@ -41,14 +53,14 @@
                     },
                     icon: '🔢'
                 },
-                {
-                    label: "输入框",
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'text'
-                    },
-                    icon: '📝'
-                },
+                // {
+                //     label: "输入框",
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'text'
+                //     },
+                //     icon: '📝'
+                // },
                 {
                     label:'文本框',
                     className: "form-control custom",
@@ -65,14 +77,14 @@
                     },
                     icon: '🔘'
                 },
-                {
-                    label: '文件上传',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'file'
-                    },
-                    icon: '🗄'
-                },
+                // {
+                //     label: '文件上传',
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'file'
+                //     },
+                //     icon: '🗄'
+                // },
                 {
                     label: '日期字段',
                     className: "form-control custom",
@@ -90,6 +102,20 @@
                 type: 'button',
                 events: {
                     click: function () {
+                        var x=formBuilder.actions.getData("json", true)
+                        x=eval( x)
+                        var tag=0
+                        
+                        for(var i=0;i<x.length;i++)
+                        {
+                            var must_in=x[i]["required"] 
+                            var value=x[i]["value"]
+                            if (must_in && !value)
+                            {
+                                tag = 2 
+                            }
+                            }
+                        if (tag == 0){
                         $.ajax({
                             url: "/create",
                             data: {
@@ -110,6 +136,9 @@
                                 })
                             }
                         })
+                    }
+                    else
+                    {tag =0}
                     }
                 },
                 disabledAttrs: [

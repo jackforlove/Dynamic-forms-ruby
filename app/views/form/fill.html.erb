@@ -6,12 +6,11 @@
   <script type="text/javascript" src='/jquery.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
-  <!--<script src="/form-builder.min.js" type="text/javascript"></script>-->
-  <!--<script src="app/assets/javascripts/form-render.min.js" type="text/javascript"></script>-->
 </head>
 <body>
 <div id="fb_editor">
-<h1>表单填写</h1>
+<h1 style="color:rgb(149, 171, 182)">填写表单
+</h1>
 <div id="qrcode"></div>
 <p>想要分享给别人？</p>
 <a id="b1" onclick="onClickB1()">分享表单链接</a>
@@ -19,72 +18,28 @@
 </body>
 
 <script>
+    thisURL = document.URL;  
+    strwrite = 
+    "<img src='https://chart.googleapis.com/chart?cht=qr&chs=150x150&choe=UTF-8&chld=L|4&chl="
+    + thisURL + "' width='150' height='150' alt= #{window.location.href}/>"; 
+    document.write( strwrite );  
     $(document).ready(function(){
         var fbTemplate = document.getElementById('fb_editor');
         var formData =  '<%= raw @json_form%>'
         var options ={ 
             i18n: {
                 locale: "zh-CN"
-                //location: 'http://languagefile.url/directory/'
-                //extension: '.ext'
-                //preloaded: {
-                //    'en-US': {...}
-                //}
             },
             stickyControls: {
                 enable: false
             },
-        //     fieldRemoveWarn: true,
-            // fields: [
-            //     {
-            //         label: "数值",
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'number'
-            //         },
-            //         icon: '🔢'
-            //     },
-            //     {
-            //         label: "输入框",
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'text'
-            //         },
-            //         icon: '📝'
-            //     },
-            //     {
-            //         label:'文本框',
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'textarea'
-            //         },
-            //         icon: '📃'
-            //     },
-            //     {
-            //         label: '下拉框',
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'select'
-            //         },
-            //         icon: '🔘'
-            //     },
-            //     {
-            //         label: '文件上传',
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'file'
-            //         },
-            //         icon: '🗄'
-            //     },
-            //     {
-            //         label: '日期字段',
-            //         className: "form-control custom",
-            //         attrs: {
-            //             type: 'date'
-            //         },
-            //         icon: '📅'
-            //     },
-            // ],
+         disabledFieldButtons: {
+          text: ['remove','edit','copy'],
+          number: ['remove','edit','copy'],
+          date: ['remove','edit','copy'],
+          textarea: ['remove','edit','copy'],
+          select: ['remove','edit','copy'],
+          },
             disableFields: ['autocomplete', 'button', 'header', 'hidden', 'paragraph', 'number', 'textarea', 'text', 'radio-group', 'checkbox-group', 'date', 'file', 'select'],
             actionButtons: [{
                 id: 'saveForm',
@@ -95,7 +50,6 @@
                     click: function () {
                         
                         var x=formBuilder.actions.getData("json", true)
-                        // alert(x);
                         x=eval( x)
                         var tag=0
                         
@@ -104,7 +58,7 @@
                             var must_in=x[i]["required"] 
                             var value=x[i]["value"]
                             var max=x[i]["max"]
-                            var min=x[i]["mix"] 
+                            var min=x[i]["min"] 
                             var subtype=x[i]["subtype"]
                             
                             if (must_in && !value)
@@ -135,6 +89,7 @@
                         }
                         
                         if (tag == 0){
+                            tag=2
                             $.ajax({
                                 url: "/save",
                                 data: {
@@ -142,44 +97,7 @@
                                 },
                                 method: "post"
                             }).done(function (result) {
-                                // var x=formBuilder.actions.getData("json", true)
-                                // // alert(x);
-                                // x=eval( x)
-                                
-                                // for(var i=0;i<x.length;i++)
-                                // {
-                                //     var must_in=x[i]["required"]
-                                //     var value=x[i]["value"]
-                                //     var max=x[i]["max"]
-                                //     var mix=x[i]["mix"]
-                                //     var subtype=x[i]["subtype"]
-                                //     // alert(!(/^1[3456789]\d{9}$/.test( parseInt(value))));
-                                //     if (must_in && !value)
-                                //     {
-                                //         result.errcode = 2 
-                                //     }
-
-                                //     if(min && max && min <= max && !(value.length >= min && value.length <= max))  
-                                //     {
-                                //          result.errcode =2 
-                                //     } 
-
-                                //     if(subtype == "password" && !(value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/) )
-                                //     {
-                                //         result.errcode = 2
-                                //     }
-                                    
-                                //     if (subtype == "tel" && !(/^1[3456789]\d{9}$/.test( parseInt(value))))
-                                //     {
-                                //         result.errcode = 2
-                                //     }
-
-                                //     if (subtype == "email" && !(value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/))
-                                //     {
-                                //         result.errcode = 2
-                                //     }
-
-                                // }
+                               
                                 if (result.errcode == 0) {
                                     swal({
                                         title: result.errmsg
@@ -194,13 +112,13 @@
                                 }
                             })
                         }
+                        else {
+                            tag=0
+                            }
                     }
                 },
-                // disabledAttrs: [
-                //     'value'
-                // ]
             }],
-            disabledActionButtons: ['data', 'save'],
+            disabledActionButtons: ['data', 'save','clear'],
             dataType: "json",
             formData: formData
         };
@@ -209,10 +127,6 @@
     function onClickB1() {
             prompt("复制下来分享给别人吧",window.location.href);
     }
-    thisURL = document.URL;  
-    strwrite = 
-    "<img src='https://chart.googleapis.com/chart?cht=qr&chs=150x150&choe=UTF-8&chld=L|4&chl="
-    + thisURL + "' width='150' height='150' alt= #{window.location.href}/>"; 
-    document.write( strwrite );  
+    
 </script>
 </html>

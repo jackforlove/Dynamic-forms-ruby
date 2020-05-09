@@ -1,0 +1,7 @@
+<section>
+<%=form_tag controller:"form",action:"search",method: "post",remote: true do %>
+<label for="form_name" required> <h2> 搜索表单</h2> </label>
+<%= text_field_tag :form_name,params[:form_name]%>
+<%= submit_tag "走起"%>
+<%end%>
+</section>

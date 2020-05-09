@@ -4,9 +4,29 @@
 </h1>
 
 <% if signed_in? %>
-     <p>欢迎您</p>
-  <h2>   <%= current_user.name%></h2>
- 
+<section>
+<%=form_tag controller:"form",action:"search",method: "post",remote: true do %>
+<label for="form_name" required> <h2> 搜索全站表单</h2> </label>
+<%= text_field_tag :form_name,params[:form_name]%>
+<%= submit_tag "走起"%>
+<%end%>
+</section>
+  <%= paginate(@forms) %>
+<table class="table table-strip">
+<tr>
+    <th >表单名</th>
+     <th >创建者</th>
+    <th>创建时间</th>
+<% @forms.each do |f| %>
+        <tr>
+        <td><%=  f.name %></td>
+        <td> <%=f.user.name%></td>
+        <td> <%=f.created_at%></td>
+     <td>  <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%> <td>
+        </tr>
+<% end %>
+</table>
+<%= paginate(@forms) %>
 <% else %>
     <%= link_to '登陆' , login_path%>
 <% end %>
