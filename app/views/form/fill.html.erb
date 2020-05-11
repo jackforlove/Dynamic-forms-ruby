@@ -52,20 +52,28 @@
                         var x=formBuilder.actions.getData("json", true)
                         x=eval( x)
                         var tag=0
-                        
+                        var value_num=false
                         for(var i=0;i<x.length;i++)
                         {
                             var must_in=x[i]["required"] 
                             var value=x[i]["value"]
+                            var type=x[i]["type"]
                             var max=x[i]["max"]
                             var min=x[i]["min"] 
                             var subtype=x[i]["subtype"]
-                            
+
+                            if (type == "select")
+                            {
+                                value=true
+                            }
+                            if (value )
+                            {
+                                value_num=true
+                            }
                             if (must_in && !value)
                             {
                                 tag = 2 
                             }
-           
                             if(min && max && min <= max && !(value.length >= min && value.length <= max))  
                             {
                                     tag =2 
@@ -87,7 +95,9 @@
                             }
                            
                         }
-                        
+
+                        if (!value_num)
+                        {tag=2}
                         if (tag == 0){
                             tag=2
                             $.ajax({

@@ -107,9 +107,10 @@
                         
                         for(var i=0;i<x.length;i++)
                         {
+                            var label=x[i]["label"]
                             var must_in=x[i]["required"] 
                             var value=x[i]["value"]
-                            if (must_in && !value)
+                            if (label == "表单标题" && must_in && !value)
                             {
                                 tag = 2 
                             }

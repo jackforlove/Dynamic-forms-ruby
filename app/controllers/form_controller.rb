@@ -2,7 +2,7 @@ require 'rubygems'
 require 'json'
 class FormController < ApplicationController
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
-    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data]
+    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data,:save,:user_data]
     protect_from_forgery :only => :index
     def home
         @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
@@ -20,8 +20,11 @@ class FormController < ApplicationController
     
     def del
         form_id=params[:form_id].to_i
-        if Form.find(form_id).destroy
-            redirect_to show_path
+        form_obj=Form.find(form_id)
+        if form_obj.user.id == current_user.id
+            if form_obj.destroy
+                redirect_to show_path
+            end
         end
     end
 
@@ -59,7 +62,6 @@ class FormController < ApplicationController
         forms_list=[]
         form.fileds.find_each do|filed|
             s=eval(filed.extra.to_s)
-            puts "-----------",filed.extra
             forms_list.push(s)
         end
         @json_form= JSON.generate(forms_list)
@@ -85,13 +87,14 @@ class FormController < ApplicationController
                 values.each do|v|
                     if v["selected"]
                         value_list.push(v["value"])
+                        value=v["value"]
                     end
                 end
             end
             if must_in
                 return unless !value.nil?
             end
-
+            puts "--------"
             if min && max && min <= max 
                 return unless value.length >= min && value.length <= max
             end
@@ -112,29 +115,6 @@ class FormController < ApplicationController
         form_obj.fileds.each do|f|
             f.values.new(content:value_list[0],form_user_id:tmp.id).save
             value_list.delete_at(0)
-        end
-        redirect_to show_path
-    end
-    
-
-    def filed_save(filed_dates,form_obj)
-        filed_dates=JSON.parse(filed_dates)
-        form_obj.fileds.find_each do |x|
-            x.destroy
-        end
-        filed_dates.each do |filed_date|
-            filed_name=filed_date["name"]
-            filed_label=filed_date["label"]
-            filed_type=filed_date["type"]
-            extra_data=filed_date
-            if filed_name =="title"
-                form_obj.update(name:filed_date["value"])
-            else
-                if extra_data.has_key?("value")
-                    extra_data["value"]=nil
-                end
-                    filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save  
-            end
         end
         redirect_to show_path
     end
@@ -183,13 +163,37 @@ class FormController < ApplicationController
         @forms=Form.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
         render 'home'
     end
+
     def search_current
         form_name=params[:form_name]
         @forms = current_user.forms.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
         render 'show'
     end
+
     private
     def signed_confirmation
         redirect_to root_path unless signed_in?   
+    end
+
+    def filed_save(filed_dates,form_obj)
+        filed_dates=JSON.parse(filed_dates)
+        form_obj.fileds.find_each do |x|
+            x.destroy
+        end
+        filed_dates.each do |filed_date|
+            filed_name=filed_date["name"]
+            filed_label=filed_date["label"]
+            filed_type=filed_date["type"]
+            extra_data=filed_date
+            if filed_name =="title"
+                form_obj.update(name:filed_date["value"])
+            else
+                if extra_data.has_key?("value")
+                    extra_data["value"]=nil
+                end
+                filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
+            end
+        end
+        redirect_to show_path
     end
 end
