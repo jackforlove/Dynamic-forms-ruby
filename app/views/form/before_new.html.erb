@@ -1,8 +1,9 @@
 <% provide(:xx ,"主页") %>
-<section>
+
 <div class="center hero-unit">
 <h1 style="color:rgb(149, 171, 182)">新建表单
 </h1>
+  <section>
 <%=form_tag controller:"form",action:"new",method: "get",remote: true do %>
 <label for="form_name" required>表单名字*</label>
 <%= text_field_tag :form_name,params[:form_name]%>

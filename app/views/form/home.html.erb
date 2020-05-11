@@ -1,9 +1,15 @@
 <% provide(:xx ,"主页") %>
+
+<h3 style="color: #B00100">
+  <% flash.each do |name, msg| -%>
+    <%= content_tag :div, msg, class: name %>
+  <% end -%>
+</h3>
 <div class="center hero-unit">
+
 <h1 style="color:rgb(149, 171, 182)">动态表单
 </h1>
-
-<% if signed_in? %>
+  <% if signed_in? %>
 <section>
 <%=form_tag controller:"form",action:"search",method: "post",remote: true do %>
 <label for="form_name" required> <h2> 搜索全站表单</h2> </label>
@@ -30,7 +36,4 @@
 <% else %>
     <%= link_to '登陆' , login_path%>
 <% end %>
-<ul>
-
-</ul>
 </div>

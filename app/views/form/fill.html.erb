@@ -8,6 +8,11 @@
   <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
 </head>
 <body>
+<h3 style="color: #B00100">
+  <% flash.each do |name, msg| -%>
+    <%= content_tag :div, msg, class: name %>
+  <% end -%>
+</h3>
 <div id="fb_editor">
 <h1 style="color:rgb(149, 171, 182)">填写表单
 </h1>

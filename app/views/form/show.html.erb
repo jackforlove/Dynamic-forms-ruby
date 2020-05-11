@@ -1,9 +1,15 @@
 <% provide(:xx ,"我的表单") %>
+<h3 style="color: #B00100">
+  <% flash.each do |name, msg| -%>
+    <%= content_tag :div, msg, class: name %>
+  <% end -%>
+</h3>
 <div  class="center hero-unit">
 
 <div>
 <h1 style="color:rgb(149, 171, 182)">我的表单
 </h1>
+
 </div>
 <section>
 <%=form_tag controller:"form",action:"search_current",method: "post",remote: true do %>

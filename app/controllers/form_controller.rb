@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'json'
 class FormController < ApplicationController
+    # force_ssl
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
     before_action :signed_confirmation , only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data,:user_data]
     protect_from_forgery :only => :index
@@ -23,8 +24,11 @@ class FormController < ApplicationController
         form_obj = Form.find(form_id)
         if form_obj.user.id == current_user.id
             if form_obj.destroy
-                redirect_to show_path
+                flash[:notice] = "表单删除成功"
+            else
+                flash[:notice] = "表单删除失败"
             end
+            redirect_to show_path
         end
     end
 
@@ -120,6 +124,7 @@ class FormController < ApplicationController
             f.values.new(content:value_list[0],form_user_id:tmp.id).save
             value_list.delete_at(0)
         end
+        flash[:notice] = "表单填写成功"
         redirect_to show_path
     end
 
@@ -153,9 +158,11 @@ class FormController < ApplicationController
     def del_data
         value_id = params[:value_id].to_i
         if FormUser.find(value_id).destroy
-            redirect_to "http://localhost:3000/userdata?form_id="+session[:form_id].to_s
-            # redirect_to show_path
+            flash[:notice] = "数据删除成功！"
+        else
+            flash[:notice] = "数据删除失败！"
         end
+        redirect_to "http://localhost:3000/userdata?form_id="+session[:form_id].to_s
     end
 
     def detail_form_user
@@ -175,7 +182,10 @@ class FormController < ApplicationController
 
     private
     def signed_confirmation
-        redirect_to root_path unless signed_in?   
+        if !signed_in?
+            flash[:notice] = "请先登录!"
+            redirect_to root_path
+        end
     end
 
     def filed_save(filed_dates,form_obj)
@@ -195,6 +205,7 @@ class FormController < ApplicationController
                     extra_data["value"]=nil
                 end
                 filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
+                flash[:notice] = "表单数据写入成功！"
             end
         end
         redirect_to show_path
