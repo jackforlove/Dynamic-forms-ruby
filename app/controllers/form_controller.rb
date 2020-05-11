@@ -2,23 +2,13 @@ require 'rubygems'
 require 'json'
 class FormController < ApplicationController
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
-    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit]
+    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data]
     protect_from_forgery :only => :index
     def home
         @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
     end
 
-    def before_new
-    end
-
     def new
-        # form_name=params[:form_name]
-        # form_note=params[:form_note]
-        # user_obj=User.find(current_user.id)
-        # session[:user_obj]=user_obj
-        # form_obj=user_obj.forms.new(name:form_name,notes:form_note)
-        # form_obj.save
-        # session[:form_id] =form_obj.id
     end
 
     def create
@@ -150,9 +140,6 @@ class FormController < ApplicationController
     end
 
     def user_data
-        # form_id=params[:form_id]
-        # session[:form_id]=form_id.to_i
-        # @datas=Form.find(form_id).form_users.order(created_at: :desc).page(params[:page]).per(5)
         form_id=params[:form_id]
         @fields = Filed.where(form_id: form_id)
         session[form_id]=form_id
@@ -175,7 +162,6 @@ class FormController < ApplicationController
     
         end
         join += " where f.form_id =" + params[:form_id].to_s
-    
         sql = select + join
         @datas = User.find_by_sql(sql)
         @form = Form.find(params[:form_id])

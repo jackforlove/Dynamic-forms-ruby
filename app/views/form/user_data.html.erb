@@ -19,9 +19,8 @@
         <%x=nil%>
              <%@fields.each do |field|%>
           <td ><%= f["key_" + field.id.to_s]%></td>
-          <%x=field%>
         <% end%>
-    <td><%= link_to '删除',deldata_path(value_id:x.values.first.form_user.id,controller: 'form' , action: 'deldata')%></td>
+    <td><%= link_to '删除',deldata_path(value_id:@fields.first.values.first.form_user.id,controller: 'form' , action: 'deldata')%></td>
             </tr>
 <% end %>
 </table>
