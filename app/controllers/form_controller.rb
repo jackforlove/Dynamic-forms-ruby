@@ -2,7 +2,7 @@ require 'rubygems'
 require 'json'
 class FormController < ApplicationController
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
-    before_action :signed_confirmation,only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data,:save,:user_data]
+    before_action :signed_confirmation , only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data,:user_data]
     protect_from_forgery :only => :index
     def home
         @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
@@ -12,15 +12,15 @@ class FormController < ApplicationController
     end
 
     def create
-        form_obj=current_user.forms.new()
+        form_obj = current_user.forms.new()
         form_obj.save
-        filed_dates=params[:properties]
+        filed_dates = params[:properties]
         filed_save(filed_dates,form_obj)
     end
     
     def del
-        form_id=params[:form_id].to_i
-        form_obj=Form.find(form_id)
+        form_id = params[:form_id].to_i
+        form_obj = Form.find(form_id)
         if form_obj.user.id == current_user.id
             if form_obj.destroy
                 redirect_to show_path
@@ -33,10 +33,10 @@ class FormController < ApplicationController
     end
     
     def edit
-        @form_id=params[:form_id].to_i
+        @form_id = params[:form_id].to_i
         session[:form_id] = @form_id
-        form=Form.find(@form_id)
-        forms_list=[]
+        form = Form.find(@form_id)
+        forms_list = []
         form.fileds.find_each do|filed|
             s=eval(filed.extra.to_s)
             forms_list.push(s)
@@ -45,56 +45,55 @@ class FormController < ApplicationController
     end
 
     def update
-        form_obj=Form.find(session[:form_id])
-        session[:form_id]=nil
+        form_obj = Form.find(session[:form_id])
+        session[:form_id] = nil
         form_obj.fileds.find_each do|x|
-            x.extra=nil
+            x.extra = nil
             x.save
         end
-        filed_dates=params[:properties]
+        filed_dates = params[:properties]
         filed_save(filed_dates,form_obj)
     end
 
     def fill
-        form_id=params[:form_id].to_i
+        form_id = params[:form_id].to_i
         session[:form_id] = form_id
-        form=Form.find(form_id)
-        forms_list=[]
+        form = Form.find(form_id)
+        forms_list = []
         form.fileds.find_each do|filed|
-            s=eval(filed.extra.to_s)
+            s = eval(filed.extra.to_s)
             forms_list.push(s)
         end
-        @json_form= JSON.generate(forms_list)
+        @json_form = JSON.generate(forms_list)
     end
     
     def save
-        filed_dates=params[:properties]
-        filed_dates=JSON.parse(filed_dates)
-        form_obj=Form.find(session[:form_id])
-        session[:form_id]=nil
-        value_list=[]
+        filed_dates = params[:properties]
+        filed_dates = JSON.parse(filed_dates)
+        form_obj = Form.find(session[:form_id])
+        session[:form_id] = nil
+        value_list = []
         filed_dates.each do|f|
-            type=f["type"]
-            must_in=f["required"]
-            min=f["min"]
-            max=f["max"]
-            value=f["value"]
+            type = f["type"]
+            must_in = f["required"]
+            min = f["min"]
+            max = f["max"]
+            value = f["value"]
             subtype = f["subtype"]
-            values=f["values"]
+            values = f["values"]
             if !values
                 value_list.push(value)
             else
                 values.each do|v|
                     if v["selected"]
                         value_list.push(v["value"])
-                        value=v["value"]
+                        value = v["value"]
                     end
                 end
             end
             if must_in
                 return unless !value.nil?
             end
-            puts "--------"
             if min && max && min <= max 
                 return unless value.length >= min && value.length <= max
             end
@@ -110,8 +109,13 @@ class FormController < ApplicationController
                 return unless value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
             end
         end
-        tmp=form_obj.form_users.new(user_id:current_user.id)
-        tmp.save
+        if signed_in?
+            tmp=form_obj.form_users.new(user_id:current_user.id)
+            tmp.save
+        else
+            tmp=form_obj.form_users.new(user_id:4)
+            tmp.save
+        end
         form_obj.fileds.each do|f|
             f.values.new(content:value_list[0],form_user_id:tmp.id).save
             value_list.delete_at(0)
@@ -120,17 +124,16 @@ class FormController < ApplicationController
     end
 
     def user_data
-        form_id=params[:form_id]
+        form_id = params[:form_id]
         @fields = Filed.where(form_id: form_id)
-        session[form_id]=form_id
-        select = " select u.id, u.name"
+        session[:form_id] = form_id
+        select = " select u.id, u.name,f.id,f.created_at"
         if @fields.length != 0
           select += ","
         end
     
         join = " from `form_users` f left join `users` u on f.user_id = u.id "
         i = 0
-
         @fields.each do |field|
           i += 1
           select += " v" + i.to_s + ".content as key_" + field.id.to_s
@@ -148,10 +151,10 @@ class FormController < ApplicationController
     end
 
     def del_data
-        value_id=params[:value_id].to_i
+        value_id = params[:value_id].to_i
         if FormUser.find(value_id).destroy
-            # redirect_to "http://localhost:3000/userdata?form_id="+session[:form_id].to_s
-            redirect_to show_path
+            redirect_to "http://localhost:3000/userdata?form_id="+session[:form_id].to_s
+            # redirect_to show_path
         end
     end
 
@@ -159,13 +162,13 @@ class FormController < ApplicationController
         # @fields = Filed.where(form_id: params[:form_id])
     end
     def search
-        form_name=params[:form_name]
-        @forms=Form.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
+        form_name = params[:form_name]
+        @forms = Form.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
         render 'home'
     end
 
     def search_current
-        form_name=params[:form_name]
+        form_name = params[:form_name]
         @forms = current_user.forms.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
         render 'show'
     end
