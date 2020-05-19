@@ -5,12 +5,14 @@ html {
 }
 body{
     padding-top: 60px;
-    color: #333;
+    color: #333333;
     // text-align: center;
 }
 table {margin: auto;}
 section{
     overflow: auto;
+    padding-left: 200px;
+    padding-right: 200px;
 }
 
 textarea{
@@ -47,7 +49,7 @@ p{
     float: left;
     margin-right: 10px;
     font-size: 1.7em;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.6);
     text-transform: uppercase;
     letter-spacing: -1px;
     padding-top: 9px;
@@ -104,11 +106,6 @@ aside{
         &:first-child{
             border: 0;
             padding-top: 0;
-        }
-        span{
-            display: block;
-            margin-bottom: 3px;
-            line-height: 1;
         }
         h1{
             font-size: 2.2em;
@@ -206,4 +203,8 @@ input{
 }
 .mxl{
    color:rgb(199, 197, 197)
+}
+span {
+  display:inline-block;
+  width:49%;
 }

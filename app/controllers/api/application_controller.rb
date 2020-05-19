@@ -55,4 +55,12 @@ class Api::ApplicationController < ActionController::API
     params[:page] ||= 1
     params[:per_page] ||= DEFAULT_PERPAGE
   end
+
+  def form_api
+    retValue = {
+        "name":"api名称",
+        "id":"api的id"
+    }
+    render_json retValue
+  end
 end

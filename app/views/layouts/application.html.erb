@@ -4,12 +4,13 @@
   <title><%=  full_title( yield(:xx) ) %></title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <script src="/jquery.validate.min.js"></script>
   <%= csrf_meta_tags %>
   <%= render 'layouts/shim' %>
 </head>
-<body style="background: #f5f5f5",class="center">
+<body style="background: #f5f5f5">
 <%=render 'layouts/header'%>
-<div class="container">
+<div class="container-fluid">
 <%= yield %>
 <%= render 'layouts/footer'%>
 </div>

@@ -5,35 +5,94 @@
     <%= content_tag :div, msg, class: name %>
   <% end -%>
 </h3>
-<div class="center hero-unit">
 
-<h1 style="color:rgb(149, 171, 182)">动态表单
+<div class="center hero-unit">
+<h1 style="color:rgb(149, 171, 182)">动态表单系统
 </h1>
+</div>
+
   <% if signed_in? %>
-<section>
-<%=form_tag controller:"form",action:"search",method: "post",remote: true do %>
-<label for="form_name" required> <h2> 搜索全站表单</h2> </label>
-<%= text_field_tag :form_name,params[:form_name]%>
-<%= submit_tag "走起"%>
+  <span>
+      <%= paginate(@forms) %>
+    <div class="container" style="width: 80%">
+    <h2>全站表单</h2>
+  <div class="input-group center"  style="width: 100%">
+<%=form_tag controller:"form",action:"search",method: 'post',remote: true do %>
+      <div class="form-group row center ">
+        <span class="center">
+          <%= text_field_tag :form_name, params[:form_name], class:"form-control" %>
+        </span>
+        <span class="col-sm-13">
+          <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
+        </span>
+      </div>
+
 <%end%>
-</section>
-  <%= paginate(@forms) %>
+  </div>
 <table class="table table-strip">
 <tr>
     <th >表单名</th>
      <th >创建者</th>
     <th>创建时间</th>
+  <th>开始时间</th>
+  <th>结束时间</th>
+  <th>状态</th>
+  <th>动作</th>
+</tr>
 <% @forms.each do |f| %>
-        <tr>
+        <tr >
         <td><%=  f.name %></td>
         <td> <%=f.user.name%></td>
         <td> <%=f.created_at%></td>
-     <td>  <%= link_to '填写',fill_path(form_id:f.id,controller: 'form' , action: 'fill')%> <td>
+          <td><%=f.start_at%></td>
+          <td><%=f.end_at%></td>
+          <%if Time.now > Time.parse(f.end_at) %>
+            <td style="color: #B00100"> 已经过期  </td>
+          <%elsif Time.now < Time.parse(f.start_at) %>
+            <td style="color:#00BFFF"> 等待开始  </td>
+          <%else%>
+            <td style="color: #7FFF00"> 正在进行  </td>
+          <%end%>
+
+     <td>  <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) %>
+         <%= link_to '填写',fill_path(form_takon:f.takon,controller: 'form' , action: 'fill')%>
+          <%end%><td>
         </tr>
 <% end %>
 </table>
+        </div>
 <%= paginate(@forms) %>
+
+  </span>
+
+  <span >
+  <div class="container" style="width: 80%">
+    <h2>最新表单填写数据</h2>
+
+    <%if current_user.form_users.length >=1%>
+    <h2>表单名：<%=current_user.form_users.last.form.name %></h2>
+<table  class="table table-strip">
+  <% current_user.form_users.last.values.each do |v| %>
+    <tr>
+        <th>
+    <%=v.filed.label %>
+        </th>
+        <td>
+   <%=v.content%>
+        </td>
+    </tr>
+  <%end%>
+</table>
+<%else%>
+<h1 style="color:#999">没有数据哦！</h1>
+<%end%>
+
+  </div>
+</span>
+
+
+
 <% else %>
-    <%= link_to '登陆' , login_path%>
+  <h2 class="center">
+    <%= link_to '登陆' , login_path%></h2>
 <% end %>
-</div>

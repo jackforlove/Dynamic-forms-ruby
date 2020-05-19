@@ -17,8 +17,8 @@ Rails.application.routes.draw do
   match '/update',to:'form#update',via:'post'
 
   get '/detail_form_user',to:'form#detail_form_user'
-  post '/search',to:'form#search'  
-  post '/search_current',to:'form#search_current'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  post '/search',to:'form#search'
+  post '/search_current',to:'form#search_current'
   get '/deldata',to:'form#del_data'                                                                                                                                                                                         
   get '/userdata',to:'form#user_data'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   get '/del',to:'form#del'

@@ -10,6 +10,11 @@
   <!--<script src="app/assets/javascripts/form-render.min.js" type="text/javascript"></script>-->
 </head>
 <body>
+<script>
+    $.getScript('plugin.js', function(){
+        window.plugin.init();
+    });
+</script>
 <h3 style="color: #B00100">
   <% flash.each do |name, msg| -%>
     <%= content_tag :div, msg, class: name %>
@@ -17,7 +22,7 @@
 </h3>
 <div id="fb_editor">
 
-<h1 style="color:rgb(149, 171, 182)">搭配字段
+<h1 style="color:rgb(149, 171, 182)">生成表单
 </h1>
 </div>
 </body>
@@ -34,9 +39,26 @@
         name: "title",
         required: true,
         type: "text",
-      }],
+      },
+        {
+            className: "form-control",
+            label: "开始时间",
+            placeholder: "输入表单的开始时间",
+            name: "title",
+            required: true,
+            type: "date",
+        },
+        {
+            className: "form-control",
+            label: "结束时间",
+            placeholder: "输入表单的结束时间",
+            name: "title",
+            required: true,
+            type: "date",
+        }],
       disabledFieldButtons: {
           text: ['remove','edit','copy'],
+          date: ['remove','edit','copy'],
           },
             i18n: {
                 locale: "zh-CN"
@@ -50,14 +72,14 @@
                 enable: true
             },
             fields: [
-                {
-                    label: "数值",
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'number'
-                    },
-                    icon: '🔢'
-                },
+                // {
+                //     label: "数值",
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'number'
+                //     },
+                //     icon: '🔢'
+                // },
                 // {
                 //     label: "输入框",
                 //     className: "form-control custom",
@@ -66,22 +88,22 @@
                 //     },
                 //     icon: '📝'
                 // },
-                {
-                    label:'文本框',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'textarea'
-                    },
-                    icon: '📃'
-                },
-                {
-                    label: '下拉框',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'select'
-                    },
-                    icon: '🔘'
-                },
+                // {
+                //     label:'文本框',
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'textarea'
+                //     },
+                //     icon: '📃'
+                // },
+                // {
+                //     label: '下拉框',
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'select'
+                //     },
+                //     icon: '🔘'
+                // },
                 // {
                 //     label: '文件上传',
                 //     className: "form-control custom",
@@ -90,14 +112,14 @@
                 //     },
                 //     icon: '🗄'
                 // },
-                {
-                    label: '日期字段',
-                    className: "form-control custom",
-                    attrs: {
-                        type: 'date'
-                    },
-                    icon: '📅'
-                },
+                // {
+                //     label: '日期字段',
+                //     className: "form-control custom",
+                //     attrs: {
+                //         type: 'date'
+                //     },
+                //     icon: '📅'
+                // },
             ],
             disableFields: ['autocomplete', 'button', 'header', 'hidden', 'paragraph', 'number', 'textarea', 'text', 'radio-group', 'checkbox-group', 'date', 'file', 'select'],
             actionButtons: [{
@@ -109,19 +131,26 @@
                     click: function () {
                         var x=formBuilder.actions.getData("json", true)
                         x=eval( x)
-                        var tag=0
+                        var tag=[]
                         
                         for(var i=0;i<x.length;i++)
                         {
                             var label=x[i]["label"]
                             var must_in=x[i]["required"] 
                             var value=x[i]["value"]
-                            if (label == "表单标题" && must_in && !value)
+                            if (must_in && !value)
                             {
-                                tag = 2 
+                                tag.push(2)
                             }
                             }
-                        if (tag == 0){
+                        if(x[1]["value"] >= x[2]["value"])
+                        {
+                            tag.push(3)
+
+                        }
+
+                        if (tag.length == 0){
+
                         $.ajax({
                             url: "/create",
                             data: {
@@ -144,14 +173,23 @@
                         })
                     }
                     else
-                    {tag =0}
+                    {
+
+                        if (tag.includes(2))
+                        { alert("请填写标题！");}
+
+                        if(tag.includes(3))
+                        {
+                            alert("开始时间必须小于结束时间哦！");}
+                        var tag=[]
+                    }
                     }
                 },
                 disabledAttrs: [
                     'value'
                 ]
             }],
-            disabledActionButtons: ['data', 'save'],
+            disabledActionButtons: ['data', 'save','clear'],
             dataType: "json",
             formData: formData
         };

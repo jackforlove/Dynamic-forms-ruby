@@ -6,12 +6,18 @@
   <script type="text/javascript" src='/jquery.js'></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
+<!--  <script src="/jquery.validate.min.js"></script>-->
 </head>
 <body>
+<script>
+    $.getScript('plugin.js', function(){
+        window.plugin.init();
+    });
+</script>
 <h3 style="color: #B00100">
   <% flash.each do |name, msg| -%>
     <%= content_tag :div, msg, class: name %>
-  <% end -%>
+  <% end%>
 </h3>
 <div id="fb_editor">
 <h1 style="color:rgb(149, 171, 182)">填写表单
@@ -23,11 +29,7 @@
 </body>
 
 <script>
-    thisURL = document.URL;  
-    strwrite = 
-    "<img src='https://chart.googleapis.com/chart?cht=qr&chs=150x150&choe=UTF-8&chld=L|4&chl="
-    + thisURL + "' width='150' height='150' alt= #{window.location.href}/>"; 
-    document.write( strwrite );  
+
     $(document).ready(function(){
         var fbTemplate = document.getElementById('fb_editor');
         var formData =  '<%= raw @json_form%>'
@@ -129,6 +131,7 @@
                         }
                         else {
                             tag=0
+                            alert("请检查输入！");
                             }
                     }
                 },
@@ -142,6 +145,11 @@
     function onClickB1() {
             prompt("复制下来分享给别人吧",window.location.href);
     }
-    
+    thisURL = document.URL;
+    strwrite =
+        "<img src='https://chart.googleapis.com/chart?cht=qr&chs=150x150&choe=UTF-8&chld=L|4&chl="
+        + thisURL + "' width='150' height='150' alt= #{window.location.href}/>";
+    document.write( strwrite );
+
 </script>
 </html>

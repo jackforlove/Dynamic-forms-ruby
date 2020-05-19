@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'json'
+require 'base64'
 class FormController < ApplicationController
     # force_ssl
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
@@ -13,12 +14,14 @@ class FormController < ApplicationController
     end
 
     def create
-        form_obj = current_user.forms.new()
-        form_obj.save
         filed_dates = params[:properties]
-        filed_save(filed_dates,form_obj)
+        filed_dates = JSON.parse(filed_dates)
+        form_obj = current_user.forms.new(name:filed_dates[0]["value"],takon:Base64.encode64(Time.now.to_i.to_s).to_s,start_at:filed_dates[1]["value"],end_at:filed_dates[2]["value"])
+        form_obj.save
+        session[:new_form_id]=form_obj.id
+        redirect_to edit_path
     end
-    
+
     def del
         form_id = params[:form_id].to_i
         form_obj = Form.find(form_id)
@@ -35,9 +38,14 @@ class FormController < ApplicationController
     def show
         @forms = current_user.forms.order(created_at: :desc).page(params[:page]).per(5)
     end
-    
+
     def edit
-        @form_id = params[:form_id].to_i
+        if session[:new_form_id].present?
+            @form_id = session[:new_form_id]
+            session[:new_form_id]=nil
+        else
+            @form_id = params[:form_id].to_i
+        end
         session[:form_id] = @form_id
         form = Form.find(@form_id)
         forms_list = []
@@ -60,9 +68,9 @@ class FormController < ApplicationController
     end
 
     def fill
-        form_id = params[:form_id].to_i
-        session[:form_id] = form_id
-        form = Form.find(form_id)
+        form_takon = params[:form_takon]
+        session[:form_takon] = form_takon
+        form = Form.find_by(takon:form_takon)
         forms_list = []
         form.fileds.find_each do|filed|
             s = eval(filed.extra.to_s)
@@ -70,11 +78,11 @@ class FormController < ApplicationController
         end
         @json_form = JSON.generate(forms_list)
     end
-    
+
     def save
         filed_dates = params[:properties]
         filed_dates = JSON.parse(filed_dates)
-        form_obj = Form.find(session[:form_id])
+        form_obj = Form.find_by(takon: session[:form_takon])
         session[:form_id] = nil
         value_list = []
         filed_dates.each do|f|
@@ -98,11 +106,11 @@ class FormController < ApplicationController
             if must_in
                 return unless !value.nil?
             end
-            if min && max && min <= max 
+            if min && max && min <= max
                 return unless value.length >= min && value.length <= max
             end
 
-            if subtype == "password" 
+            if subtype == "password"
                 return unless value =~ /^(?![0-9a-z]+$)(?![a-zA-Z]+$)(?![0-9A-Z]+$)[0-9a-zA-Z]{6,}$/
             end
 
@@ -134,20 +142,20 @@ class FormController < ApplicationController
         session[:form_id] = form_id
         select = " select u.id, u.name,f.id,f.created_at"
         if @fields.length != 0
-          select += ","
+            select += ","
         end
-    
+
         join = " from `form_users` f left join `users` u on f.user_id = u.id "
         i = 0
         @fields.each do |field|
-          i += 1
-          select += " v" + i.to_s + ".content as key_" + field.id.to_s
-          if i != @fields.length
-            select += ", "
-          end
-    
-          join += " left join `values` v" + i.to_s + " on `v" + i.to_s + "`.`form_user_id` = f.id and v" + i.to_s + ".filed_id = " + field.id.to_s
-    
+            i += 1
+            select += " v" + i.to_s + ".content as key_" + field.id.to_s
+            if i != @fields.length
+                select += ", "
+            end
+
+            join += " left join `values` v" + i.to_s + " on `v" + i.to_s + "`.`form_user_id` = f.id and v" + i.to_s + ".filed_id = " + field.id.to_s
+
         end
         join += " where f.form_id =" + params[:form_id].to_s
         sql = select + join
@@ -180,6 +188,7 @@ class FormController < ApplicationController
         render 'show'
     end
 
+
     private
     def signed_confirmation
         if !signed_in?
@@ -198,15 +207,11 @@ class FormController < ApplicationController
             filed_label=filed_date["label"]
             filed_type=filed_date["type"]
             extra_data=filed_date
-            if filed_name =="title"
-                form_obj.update(name:filed_date["value"])
-            else
-                if extra_data.has_key?("value")
-                    extra_data["value"]=nil
-                end
-                filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
-                flash[:notice] = "表单数据写入成功！"
+            if extra_data.has_key?("value")
+                extra_data["value"]=nil
             end
+            filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
+            flash[:notice] = "表单数据写入成功！"
         end
         redirect_to show_path
     end
