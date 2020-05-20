@@ -4,23 +4,19 @@
     <%= content_tag :div, msg, class: name %>
   <% end -%>
 </h3>
-<div  class="center hero-unit container">
-<div>
+<div  class="center  ">
+<div class="center hero-unit " style="background: aliceblue">
 <h1 style="color:rgb(149, 171, 182)">我的表单
 </h1>
 
 </div>
   <div class="input-group">
 <%=form_tag controller:"form",action:"search_current",method: 'post',remote: true do %>
-      <div class="form-group row">
+      <span class="form-group row center" style="width: 50%;">
         <label class="col-sm-1 control-label">搜索我的表单</label>
           <%= text_field_tag :form_name, params[:form_name], class:"form-control" %>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-13">
-          <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
-        </div>
-      </div>
+        <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
+      </span>
 <%end%>
   </div>
 <div class="pull-left"><%= link_to '创建表单', new_path %>
@@ -36,7 +32,9 @@
     <th>开始时间</th>
     <th>结束时间</th>
     <th>状态</th>
+  <th>控制</th>
     <th>动作</th>
+
         </tr>
      
 <% @forms.each do |f| %>
@@ -48,22 +46,42 @@
          <td><%=f.form_users.count%></td>
          <td><%=f.start_at%></td>
          <td><%=f.end_at%></td>
-          <%if Time.now > Time.parse(f.end_at) %>
+          <%if Time.now > Time.parse(f.end_at)  %>
             <td style="color: #B00100"> 已经过期  </td>
-          <%elsif Time.now < Time.parse(f.start_at) %>
+          <%elsif Time.now < Time.parse(f.start_at)%>
             <td style="color:#00BFFF"> 等待开始  </td>
           <%else%>
+            <%if f.tag %>
             <td style="color: #7FFF00"> 正在进行  </td>
+              <%else %>
+             <td style="color: #2E2EFE"> 停止填写  </td>
+              <%end %>
           <%end%>
-        <td><%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
-        <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
-          <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) %>
-            <%= link_to '填写',fill_path(form_takon:f.takon,controller: 'form' , action: 'fill')%>
+          <td>
+            <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) %>
+            <%if f.tag %>
+              <%= link_to '❤️',stop_path(form_takon:f.takon,controller: 'form' , action: 'stop')%>
+            <%else %>
+              <%= link_to '💚',restart_path(form_takon:f.takon,controller: 'form' , action: 'restart')%>
             <%end%>
+            <%else %>
+            🔓
+            <%end %>
+          </td>
+          <td>
+          <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) %>
+              <%if f.tag %>
+                <%= link_to '填写',fill_path(form_takon:f.takon,controller: 'form' , action: 'fill')%>
+                <%else %>
+                <%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+                <%end %>
+              <%elsif Time.now < Time.parse(f.start_at) %>
+            <%= link_to '修改',edit_path(form_id:f.id,controller: 'form' , action: 'edit')%>
+            <%end %>
+            <%= link_to '删除',del_path(form_id:f.id,controller: 'form' , action: 'del')%>
     <%= link_to '查看数据',userdata_path(form_id:f.id,controller: 'form' , action: 'user_data')%></td>
         </tr>
 <% end %>
 </table>
 <%= paginate(@forms) %>
 </div>
-

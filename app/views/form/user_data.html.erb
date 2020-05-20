@@ -5,28 +5,31 @@
   <% end -%>
 </h3>
 
-<div  class="center hero-unit">
+<div  class="center ">
+  <div class="center hero-unit" style="background: aquamarine">
 <h1 style="color:rgb(149, 171, 182)">填写的表单</h1>
-
+  </div>
 <%if @datas.length >=1%>
     <h2>表单名：<%=@form.name %></h2>
 <table  class="table table-strip">
 <tr>
    <th>填写者</th>
   <th>填写时间</th>
-    <% @fields.each do |v| %>
+    <% @fields[0..5].each do |v| %>
         <th><%=v.label%></th>
     <% end %>
+  <th>动作</th>
 </tr>
 <% @datas.each do |f| %>
         <tr>
         <td> <%=f.name%></td>
           <td><%=f["created_at"] %></td>
         <%x=nil%>
-             <%@fields.each do |field|%>
+             <%@fields[0..5].each do |field|%>
           <td ><%= f["key_" + field.id.to_s]%></td>
         <% end%>
-    <td><%= link_to '删除',deldata_path(value_id:f["id"],controller: 'form' , action: 'deldata')%></td>
+          <td><%= link_to '查看详细',detail_form_user_path(value_id:f["id"],controller: 'form' , action: 'detail_form_user')%>
+          <%= link_to '删除',deldata_path(value_id:f["id"],controller: 'form' , action: 'deldata')%></td>
             </tr>
 <% end %>
 </table>

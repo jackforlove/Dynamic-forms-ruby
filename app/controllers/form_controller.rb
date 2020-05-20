@@ -7,7 +7,18 @@ class FormController < ApplicationController
     before_action :signed_confirmation , only: [:create, :update, :submit,:new,:show,:del,:edit,:del_data,:user_data]
     protect_from_forgery :only => :index
     def home
-        @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
+        if signed_in?
+            @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
+            advance_forms = Time.now-100.years
+            Form.where(user_id:current_user.id).find_each do|f|
+                if f.form_users.present?
+                    if f.form_users.last.updated_at >= advance_forms
+                        advance_forms = f.form_users.last.updated_at
+                    end
+                end
+            end
+            @form_user=FormUser.find_by_updated_at(advance_forms)
+        end
     end
 
     def new
@@ -16,7 +27,7 @@ class FormController < ApplicationController
     def create
         filed_dates = params[:properties]
         filed_dates = JSON.parse(filed_dates)
-        form_obj = current_user.forms.new(name:filed_dates[0]["value"],takon:Base64.encode64(Time.now.to_i.to_s).to_s,start_at:filed_dates[1]["value"],end_at:filed_dates[2]["value"])
+        form_obj = current_user.forms.new(name:filed_dates[0]["value"],takon:Base64.encode64(Time.now.to_i.to_s).to_s,start_at:filed_dates[1]["value"],end_at:filed_dates[2]["value"],tag:true )
         form_obj.save
         session[:new_form_id]=form_obj.id
         redirect_to edit_path
@@ -69,14 +80,18 @@ class FormController < ApplicationController
 
     def fill
         form_takon = params[:form_takon]
-        session[:form_takon] = form_takon
         form = Form.find_by(takon:form_takon)
-        forms_list = []
-        form.fileds.find_each do|filed|
-            s = eval(filed.extra.to_s)
-            forms_list.push(s)
+        if form.tag && Time.now < Time.parse(form.end_at) && Time.now > Time.parse(form.start_at)
+          session[:form_takon] = form_takon
+          forms_list = []
+          form.fileds.find_each do|filed|
+              s = eval(filed.extra.to_s)
+              forms_list.push(s)
+          end
+          @json_form = JSON.generate(forms_list)
+        else
+          redirect_to root_path
         end
-        @json_form = JSON.generate(forms_list)
     end
 
     def save
@@ -174,7 +189,8 @@ class FormController < ApplicationController
     end
 
     def detail_form_user
-        # @fields = Filed.where(form_id: params[:form_id])
+        value_id = params[:value_id].to_i
+        @values=FormUser.find(value_id).values
     end
     def search
         form_name = params[:form_name]
@@ -188,6 +204,19 @@ class FormController < ApplicationController
         render 'show'
     end
 
+    def stop
+        form_takon = params[:form_takon]
+        form = Form.find_by(takon:form_takon)
+        form.update(tag:false)
+        redirect_to show_path
+    end
+
+    def restart
+        form_takon = params[:form_takon]
+        form = Form.find_by(takon:form_takon)
+        form.update(tag:true )
+        redirect_to show_path
+    end
 
     private
     def signed_confirmation
@@ -215,4 +244,6 @@ class FormController < ApplicationController
         end
         redirect_to show_path
     end
+
+
 end

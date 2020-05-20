@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   match '/update',to:'form#update',via:'post'
 
   get '/detail_form_user',to:'form#detail_form_user'
+  get '/stop',to:'form#stop'
+  get '/restart',to:'form#restart'
   post '/search',to:'form#search'
   post '/search_current',to:'form#search_current'
   get '/deldata',to:'form#del_data'                                                                                                                                                                                         
@@ -29,5 +31,6 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', :to => 'user_sessions#create'
   get '/auth/failure', :to => 'user_sessions#failure'
   get '/logout', :to => 'user_sessions#logout'
+
 end
 

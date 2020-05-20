@@ -1,19 +1,18 @@
-<div  class="center hero-unit">
-<h2 style="color:rgb(128, 128, 128)">详细的表单</h2>
-<table class="table table-strip">
-<tr>
-<th>字段类型</th>
-<th></th>
-<th>字段名称</th>
-<th></th>
-<th>数据内容</th>
-</tr>
-    <tr>
+<div class="container">
+<div  class="center hero-unit" style="background: beige">
+<h1 style="color:rgb(128, 128, 128)"><%=@values.first.filed.form.name %></h1>
+</div>
+<div class="center hero-unit" >
+<table class="table table-strip center">
+
+
         <%@values.each do |v|%>
-        <td><%=v.label%><td>
-        <td><%=v.name%><td>
-      
-</tr>
+    <tr>
+        <td><%=v.filed.label%><td>
+        <td><%=v.content%><td>
+    </tr>
         <%end%>
+
         </table>
-        </div>
+</div>
+</div>

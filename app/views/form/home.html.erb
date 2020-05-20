@@ -1,39 +1,36 @@
 <% provide(:xx ,"主页") %>
 
-<h3 style="color: #B00100">
+<h3 style = "color: #B00100">
   <% flash.each do |name, msg| -%>
     <%= content_tag :div, msg, class: name %>
   <% end -%>
 </h3>
 
-<div class="center hero-unit">
-<h1 style="color:rgb(149, 171, 182)">动态表单系统
+<div class = "center hero-unit" style="background: azure">
+<h1 style = "color:rgb(149, 171, 182)">动态表单系统
 </h1>
 </div>
 
   <% if signed_in? %>
   <span>
       <%= paginate(@forms) %>
-    <div class="container" style="width: 80%">
+    <div class = "container" style="width: 80%">
     <h2>全站表单</h2>
-  <div class="input-group center"  style="width: 100%">
+  <div class = "input-group center"  style = "width: 100%">
 <%=form_tag controller:"form",action:"search",method: 'post',remote: true do %>
-      <div class="form-group row center ">
-        <span class="center">
+      <div class = "form-group row center ">
+        <span class = "center">
           <%= text_field_tag :form_name, params[:form_name], class:"form-control" %>
-        </span>
-        <span class="col-sm-13">
           <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
         </span>
       </div>
 
 <%end%>
   </div>
-<table class="table table-strip">
+<table class = "table table-strip">
 <tr>
     <th >表单名</th>
      <th >创建者</th>
-    <th>创建时间</th>
   <th>开始时间</th>
   <th>结束时间</th>
   <th>状态</th>
@@ -42,21 +39,27 @@
 <% @forms.each do |f| %>
         <tr >
         <td><%=  f.name %></td>
-        <td> <%=f.user.name%></td>
-        <td> <%=f.created_at%></td>
-          <td><%=f.start_at%></td>
-          <td><%=f.end_at%></td>
-          <%if Time.now > Time.parse(f.end_at) %>
+        <td> <%= f.user.name%></td>
+          <td><%= f.start_at%></td>
+          <td><%= f.end_at%></td>
+          <%if Time.now > Time.parse(f.end_at)  %>
             <td style="color: #B00100"> 已经过期  </td>
-          <%elsif Time.now < Time.parse(f.start_at) %>
+          <%elsif Time.now < Time.parse(f.start_at)%>
             <td style="color:#00BFFF"> 等待开始  </td>
           <%else%>
+            <%if f.tag %>
             <td style="color: #7FFF00"> 正在进行  </td>
+              <%else %>
+             <td style="color: #2E2EFE"> 停止填写  </td>
+              <%end %>
           <%end%>
 
-     <td>  <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) %>
+     <td>  <%if Time.now < Time.parse(f.end_at) && Time.now > Time.parse(f.start_at) && f.tag %>
          <%= link_to '填写',fill_path(form_takon:f.takon,controller: 'form' , action: 'fill')%>
-          <%end%><td>
+         <%else %>
+       🔓
+          <%end%>
+          <td>
         </tr>
 <% end %>
 </table>
@@ -66,16 +69,20 @@
   </span>
 
   <span >
-  <div class="container" style="width: 80%">
+  <div class = "container" style="width: 80%">
     <h2>最新表单填写数据</h2>
 
-    <%if current_user.form_users.length >=1%>
-    <h2>表单名：<%=current_user.form_users.last.form.name %></h2>
-<table  class="table table-strip">
-  <% current_user.form_users.last.values.each do |v| %>
+
+    <%if @form_user.present?%>
+    <p class="center">表单名：<%=@form_user.form.name %></p>
+      <%if @form_user.user.present? %>
+    <h3>填写者：<%=@form_user.user.name %></h3>
+      <%end %>
+<table  class = "table table-strip">
+  <% @form_user.values.each do |v| %>
     <tr>
         <th>
-    <%=v.filed.label %>
+    <%= v.filed.label %>
         </th>
         <td>
    <%=v.content%>
@@ -84,7 +91,7 @@
   <%end%>
 </table>
 <%else%>
-<h1 style="color:#999">没有数据哦！</h1>
+<h1 style = "color:#999">没有数据哦！</h1>
 <%end%>
 
   </div>
