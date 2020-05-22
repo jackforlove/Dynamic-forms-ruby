@@ -1,30 +1,35 @@
 <% provide(:xx ,"主页") %>
-
+<div class = "center hero-unit" style="background: linear-gradient(#00BFFF,whitesmoke)" >
 <h3 style = "color: #B00100">
   <% flash.each do |name, msg| -%>
     <%= content_tag :div, msg, class: name %>
   <% end -%>
 </h3>
 
-<div class = "center hero-unit" style="background: azure">
+<!--<div class = "center hero-unit" style="background: azure" >-->
+<div class = "center hero-unit" style="background: linear-gradient(lightblue,whitesmoke)" >
 <h1 style = "color:rgb(149, 171, 182)">动态表单系统
 </h1>
 </div>
 
   <% if signed_in? %>
   <span>
-      <%= paginate(@forms) %>
-    <div class = "container" style="width: 80%">
+
+    <div  >
+
     <h2>全站表单</h2>
-  <div class = "input-group center"  style = "width: 100%">
-<%=form_tag controller:"form",action:"search",method: 'post',remote: true do %>
+  <div class = "input-group "  style = "width: 100%">
+    <%= form_for( '', method: 'GET', html: {class: 'form-group'}) do %>
       <div class = "form-group row center ">
         <span class = "center">
-          <%= text_field_tag :form_name, params[:form_name], class:"form-control" %>
-          <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
+          <span2><%= date_field_tag :date_from, params[:date_from], placeholder: '开始时间', class:"datepicker" %></span2>
+          <span2><%= date_field_tag :date_to, params[:date_to], placeholder: '结束时间', class:"datepicker" %></span2>
+          <span2 ><%= select_tag :search_id, options_for_select({"表单内容":1,"创建者":2}, params[:search_id]), class:"form-control" %></span2>
+        <span2 > <%= text_field_tag :content, params[:content], class:"form-control" %> </span2>
+          <span2><%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %> </span2>
+
         </span>
       </div>
-
 <%end%>
   </div>
 <table class = "table table-strip">
@@ -64,7 +69,7 @@
 <% end %>
 </table>
         </div>
-<%= paginate(@forms) %>
+
 
   </span>
 
@@ -74,11 +79,17 @@
 
 
     <%if @form_user.present?%>
-    <p class="center">表单名：<%=@form_user.form.name %></p>
-      <%if @form_user.user.present? %>
-    <h3>填写者：<%=@form_user.user.name %></h3>
-      <%end %>
+    <h3 class="center">表单名：<%=@form_user.form.name %></h3>
+
 <table  class = "table table-strip">
+  <tr>
+    <th> 填写者：</th>
+    <td>
+      <%if @form_user.user.present? %>
+<%=@form_user.user.name %>
+      <%end %>
+    </td>
+  </tr>
   <% @form_user.values.each do |v| %>
     <tr>
         <th>
@@ -91,7 +102,7 @@
   <%end%>
 </table>
 <%else%>
-<h1 style = "color:#999">没有数据哦！</h1>
+<h2 style = "color:#999">还没有人填写你的表单，赶紧邀请起来吧！</h2>
 <%end%>
 
   </div>
@@ -103,3 +114,4 @@
   <h2 class="center">
     <%= link_to '登陆' , login_path%></h2>
 <% end %>
+</div>

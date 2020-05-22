@@ -19,8 +19,6 @@ Rails.application.routes.draw do
   get '/detail_form_user',to:'form#detail_form_user'
   get '/stop',to:'form#stop'
   get '/restart',to:'form#restart'
-  post '/search',to:'form#search'
-  post '/search_current',to:'form#search_current'
   get '/deldata',to:'form#del_data'                                                                                                                                                                                         
   get '/userdata',to:'form#user_data'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   get '/del',to:'form#del'

@@ -3,16 +3,20 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.3.1'
 
+
 # gem 'will_paginate' ,'3.0.4'
 # gem 'bootstrap-will_paginate','0.0.9'
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'bootstrap-sass','2.3.2.0'
+gem 'bootstrap-datepicker-rails', '>= 1.7.1.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 gem 'mysql2'
+gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 # Use Puma as the app server
+gem  'jquery-ui-rails', '4.0.5'
 gem 'puma', '~> 3.11'
 # Use SCSS for stylesheets
 gem 'sass-rails', '5.0.7'

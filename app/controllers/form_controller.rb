@@ -8,7 +8,27 @@ class FormController < ApplicationController
     protect_from_forgery :only => :index
     def home
         if signed_in?
-            @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
+            content = params[:content]
+            search_id = params[:search_id].to_i
+            if search_id == 1
+                @forms = Form.where("name like ?","%#{content}%").order(created_at: :desc).page(params[:page]).per(5)
+            elsif  search_id == 2
+                users=User.where("name like ?","%#{content}%").order(created_at: :desc)
+                u_id = nil
+                if users.present?
+                    u_id = users.first.id
+                end
+                if content.present?
+                    @forms = Form.where(user_id:u_id).order(created_at: :desc).page(params[:page]).per(5)
+                elsif
+                @forms = Form.where("name like ?","%#{content}%").order(created_at: :desc).page(params[:page]).per(5)
+                end
+            else
+                @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
+            end
+            @forms = @forms.where("created_at >= ?", params[:date_from]) if params[:date_from].present?
+            @forms = @forms.where("created_at <= ?", params[:date_to]) if params[:date_to].present?
+
             advance_forms = Time.now-100.years
             Form.where(user_id:current_user.id).find_each do|f|
                 if f.form_users.present?
@@ -47,7 +67,8 @@ class FormController < ApplicationController
     end
 
     def show
-        @forms = current_user.forms.order(created_at: :desc).page(params[:page]).per(5)
+        form_name = params[:form_name]
+        @forms = current_user.forms.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
     end
 
     def edit
@@ -191,17 +212,6 @@ class FormController < ApplicationController
     def detail_form_user
         value_id = params[:value_id].to_i
         @values=FormUser.find(value_id).values
-    end
-    def search
-        form_name = params[:form_name]
-        @forms = Form.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
-        render 'home'
-    end
-
-    def search_current
-        form_name = params[:form_name]
-        @forms = current_user.forms.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
-        render 'show'
     end
 
     def stop
