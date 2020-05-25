@@ -10,11 +10,13 @@
 </div>
   <div class="input-group center">
     <%= form_for( '', method: 'GET', html: {class: 'form-group'}) do %>
-      <span class="form-group row center" style="width: 50%;">
-        <label class="col-sm-1 control-label">搜索我的表单</label>
-          <%= text_field_tag :form_name, params[:form_name], class:"form-control" %>
+      <span2><%= date_field_tag :date_from, params[:date_from], placeholder: '开始时间', class:"datepicker" %></span2>
+      <span2><%= date_field_tag :date_to, params[:date_to], placeholder: '结束时间', class:"datepicker" %></span2>
+      <span2 >
+        <%= text_field_tag :form_name, params[:form_name],  placeholder: '搜索我的表单',class:"form-control" %></span2>
+      <span2>
         <%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %>
-      </span>
+      </span2>
 <%end%>
   </div>
 <div class="pull-left"><%= link_to '创建表单', new_path %>

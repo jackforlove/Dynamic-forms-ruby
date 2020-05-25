@@ -26,8 +26,8 @@ class FormController < ApplicationController
             else
                 @forms = Form.all.order(created_at: :desc).page(params[:page]).per(5)
             end
-            @forms = @forms.where("created_at >= ?", params[:date_from]) if params[:date_from].present?
-            @forms = @forms.where("created_at <= ?", params[:date_to]) if params[:date_to].present?
+            @forms = @forms.where("start_at >= ?", params[:date_from]) if params[:date_from].present?
+            @forms = @forms.where("end_at <= ?", params[:date_to]) if params[:date_to].present?
 
             advance_forms = Time.now-100.years
             Form.where(user_id:current_user.id).find_each do|f|
@@ -69,6 +69,8 @@ class FormController < ApplicationController
     def show
         form_name = params[:form_name]
         @forms = current_user.forms.where("name like ?","%#{form_name}%").order(created_at: :desc).page(params[:page]).per(5)
+        @forms = @forms.where("start_at >= ?", params[:date_from]) if params[:date_from].present?
+        @forms = @forms.where("end_at <= ?", params[:date_to]) if params[:date_to].present?
     end
 
     def edit
