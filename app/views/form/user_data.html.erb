@@ -29,7 +29,9 @@
           <td ><%= f["key_" + field.id.to_s]%></td>
         <% end%>
           <td><%= link_to '查看详细',detail_form_user_path(value_id:f["id"],controller: 'form' , action: 'detail_form_user')%>
-          <%= link_to '删除',deldata_path(value_id:f["id"],controller: 'form' , action: 'deldata')%></td>
+          <%= link_to '删除',deldata_path(value_id:f["id"],controller: 'form' , action: 'deldata')%>
+          <%= link_to '下载csv',csv_path(value_id:f["id"],controller:'form',action:'csv') %>
+          </td>
             </tr>
 <% end %>
 </table>

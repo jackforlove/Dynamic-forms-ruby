@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   match '/edit',to: 'form#edit',via:'get'
   match '/update',to:'form#update',via:'post'
 
+  get '/csv',to:'form#csv'
   get '/detail_form_user',to:'form#detail_form_user'
   get '/stop',to:'form#stop'
   get '/restart',to:'form#restart'

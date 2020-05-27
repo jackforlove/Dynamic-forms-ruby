@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'json'
 require 'base64'
+require 'csv'
 class FormController < ApplicationController
     # force_ssl
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
@@ -84,7 +85,7 @@ class FormController < ApplicationController
         form = Form.find(@form_id)
         forms_list = []
         form.fileds.find_each do|filed|
-            s=eval(filed.extra.to_s)
+            s = eval(filed.extra.to_s)
             forms_list.push(s)
         end
         @json_form= JSON.generate(forms_list)
@@ -111,6 +112,7 @@ class FormController < ApplicationController
               s = eval(filed.extra.to_s)
               forms_list.push(s)
           end
+          @form_name = form.name
           @json_form = JSON.generate(forms_list)
         else
           redirect_to root_path
@@ -156,14 +158,14 @@ class FormController < ApplicationController
             end
 
             if subtype == "email"
-                return unless value=~/^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
+                return unless value =~ /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
             end
         end
         if signed_in?
-            tmp=form_obj.form_users.new(user_id:current_user.id)
+            tmp = form_obj.form_users.new(user_id:current_user.id)
             tmp.save
         else
-            tmp=form_obj.form_users.new(user_id:4)
+            tmp = form_obj.form_users.new(user_id:4)
             tmp.save
         end
         form_obj.fileds.each do|f|
@@ -230,6 +232,20 @@ class FormController < ApplicationController
         redirect_to show_path
     end
 
+    def csv
+        form_user = FormUser.find(params[:value_id].to_i)
+        values = form_user.values
+        csv_string = CSV.generate do |csv|
+            csv << ["表单名称",form_user.form.name]
+            csv << ["填写者",form_user.user.name]
+            csv << ["字段名","内容"]
+            values.each do |v|
+                csv << [v.filed.label,v.content]
+            end
+        end
+        send_data csv_string, :type => 'text/csv; charset=utf-8', :filename => "#{form_user.form.name + "——" + form_user.user.name}.csv"
+    end
+
     private
     def signed_confirmation
         if !signed_in?
@@ -239,19 +255,19 @@ class FormController < ApplicationController
     end
 
     def filed_save(filed_dates,form_obj)
-        filed_dates=JSON.parse(filed_dates)
+        filed_dates = JSON.parse(filed_dates)
         form_obj.fileds.find_each do |x|
             x.destroy
         end
         filed_dates.each do |filed_date|
-            filed_name=filed_date["name"]
-            filed_label=filed_date["label"]
-            filed_type=filed_date["type"]
-            extra_data=filed_date
+            filed_name = filed_date["name"]
+            filed_label = filed_date["label"]
+            filed_type = filed_date["type"]
+            extra_data = filed_date
             if extra_data.has_key?("value")
                 extra_data["value"]=nil
             end
-            filed_obj=form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
+            filed_obj = form_obj.fileds.build(name:filed_name,label:filed_label,f_type:filed_type,extra:extra_data).save
             flash[:notice] = "表单数据写入成功！"
         end
         redirect_to show_path

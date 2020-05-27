@@ -8,8 +8,7 @@
 
 <!--<div class = "center hero-unit" style="background: azure" >-->
 <div class = "center hero-unit" style="background: linear-gradient(lightblue,whitesmoke)" >
-<h1 style = "color:rgb(149, 171, 182)">动态表单系统
-</h1>
+<h1 style = "color:rgb(149, 171, 182)">动态表单系统</h1>
 </div>
 
   <% if signed_in? %>
@@ -21,14 +20,14 @@
   <div class = "input-group "  style = "width: 100%">
     <%= form_for( '', method: 'GET', html: {class: 'form-group'}) do %>
       <div class = "form-group row center ">
-        <span class = "center">
+
           <span2><%= date_field_tag :date_from, params[:date_from], placeholder: '开始时间', class:"datepicker" %></span2>
           <span2><%= date_field_tag :date_to, params[:date_to], placeholder: '结束时间', class:"datepicker" %></span2>
-          <span2 ><%= select_tag :search_id, options_for_select({"表单内容":1,"创建者":2}, params[:search_id]), class:"form-control" %></span2>
+          <span2 ><%= select_tag :search_id, options_for_select({'表单内容':1,'创建者':2}, params[:search_id]), class:"form-control" %></span2>
         <span2 > <%= text_field_tag :content, params[:content],  placeholder: '搜索全站表单',class:"form-control" %> </span2>
           <span2><%= submit_tag '搜索', class: 'btn btn-sm btn-primary' %> </span2>
 
-        </span>
+
       </div>
 <%end%>
   </div>

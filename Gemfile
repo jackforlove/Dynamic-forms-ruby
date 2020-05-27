@@ -6,7 +6,7 @@ ruby '2.3.1'
 
 # gem 'will_paginate' ,'3.0.4'
 # gem 'bootstrap-will_paginate','0.0.9'
-gem 'bootsnap', '>= 1.1.0', require: false
+
 gem 'bootstrap-sass','2.3.2.0'
 gem 'bootstrap-datepicker-rails', '>= 1.7.1.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -14,7 +14,7 @@ gem 'rails', '~> 5.2.0'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
 gem 'mysql2'
-gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
+# gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 # Use Puma as the app server
 gem  'jquery-ui-rails', '4.0.5'
 gem 'puma', '~> 3.11'
@@ -44,7 +44,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'capistrano-rails', group: :development
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+# gem 'bootsnap', '= 1.1.0', require: false
 gem 'rubyzip', '1.3'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
