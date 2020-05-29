@@ -16,7 +16,7 @@
 
     <div  >
 
-    <h2>全站表单</h2>
+    <h2>全站表单(只显示最新的5张表)</h2>
   <div class = "input-group "  style = "width: 100%">
     <%= form_for( '', method: 'GET', html: {class: 'form-group'}) do %>
       <div class = "form-group row center ">
@@ -74,7 +74,7 @@
 
   <span >
   <div class = "container" style="width: 80%">
-    <h2>最新表单填写数据</h2>
+    <h2>最新表单填写数据（只显示6个字段）</h2>
 
 
     <%if @form_user.present?%>
@@ -89,7 +89,7 @@
       <%end %>
     </td>
   </tr>
-  <% @form_user.values.each do |v| %>
+  <% @form_user.values[0..5].each do |v| %>
     <tr>
         <th>
     <%= v.filed.label %>

@@ -2,6 +2,7 @@ require 'rubygems'
 require 'json'
 require 'base64'
 require 'csv'
+
 class FormController < ApplicationController
     # force_ssl
     skip_before_action :verify_authenticity_token, only: [:create, :update, :submit]
@@ -173,9 +174,12 @@ class FormController < ApplicationController
             value_list.delete_at(0)
         end
         flash[:notice] = "表单填写成功"
-        redirect_to show_path
+        redirect_to finish_fill_path
     end
 
+    def finish_fill
+        @forms = Form.where('start_at < ? and end_at > ? and tag ',Time.now,Time.now)[0..5]
+    end
     def user_data
         form_id = params[:form_id]
         @fields = Filed.where(form_id: form_id)

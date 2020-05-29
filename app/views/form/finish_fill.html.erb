@@ -1,0 +1,25 @@
+<% provide(:xx ,"填写") %>
+<div class="container">
+<div  class="center hero-unit" style="background: #bce8f1 ">
+  <h1 style="color:rgb(128, 128, 128)">恭喜你，表单填写完成！</h1>
+</div>
+<div class="hero-unit">
+  <h2>欢迎填写更多表单</h2>
+  <table class = "table table-strip">
+    <tr>
+      <th >表单名</th>
+      <th >创建者</th>
+      <th>动作</th>
+    </tr>
+    <% @forms.each do |f| %>
+      <tr >
+        <td><%=  f.name %></td>
+        <td> <%= f.user.name%></td>
+        <td>
+            <%= link_to '填写',fill_path(form_takon:f.takon,controller: 'form' , action: 'fill')%>
+        <td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+</div>
