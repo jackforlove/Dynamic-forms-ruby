@@ -17,7 +17,7 @@ gem 'mysql2'
 # gem 'calendar_date_select', :git => 'http://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 # Use Puma as the app server
 gem  'jquery-ui-rails', '4.0.5'
-gem 'puma', '~> 3.11'
+gem 'puma', '~> 5.6'
 # Use SCSS for stylesheets
 gem 'sass-rails', '5.0.7'
 # Use Uglifier as compressor for JavaScript assets
